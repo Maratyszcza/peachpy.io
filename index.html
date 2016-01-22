@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>PeachPy Eating Contest</title>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/5.1.0/css/bootstrap-slider.min.css">
+<style type="text/css" media="screen">
+    #logo {
+        height: 50px;
+    }
+    #editor {
+        position: absolute;
+        top: 50px;
+        right: 0;
+        bottom: 25px;
+        left: 0;
+    }
+    #overlay {
+        padding: 20px;
+        font-family: monospace;
+        background: black;
+        position: fixed;
+        top: 50px;
+        bottom: 10px;
+        left: 0;
+        right: 0;
+        width: 100%;
+        opacity: 0.0;
+        display: none;
+        z-index: 7;
+        overflow: scroll;
+    }
+    #overlay p {
+        color: lime;
+        margin: 0;
+    }
+    #overlay p.loading {
+        margin-left: 20px;
+    }
+    #overlay p.report {
+        margin-left: 20px;
+        color: cyan;
+    }
+    p.progress {
+        float: right;
+        background: transparent;
+    }
+    #overlay p.stdout {
+        margin-left: 20px;
+        color: yellow;
+    }
+    #overlay svg {
+        margin: 20px;
+        font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    }
+    #status {
+        height: 25px;
+        min-height: 25px;
+        color: limegreen;
+    }
+    #status p {
+        margin: auto 20px;
+    }
+    #status p.failed, #overlay p.failed {
+        color: red;
+    }
+    .slider-label {
+        width: 50px;
+        font-size: medium;
+        float: left;
+    }
+    .slider-value {
+        width: 90px;
+        font-size: medium;
+        float: right;
+    }
+    .slider.slider-horizontal {
+        width: 175px;
+    }
+    #parameters {
+        min-width: 350px;
+    }
+    #parameters .container-fluid {
+        text-align: center;
+        height: 30px;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-default navbar-static-top">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Target: <span id="target-label" data-target="haswell">Intel Haswell</span> <span class="caret"></span></a>
+                <ul class="dropdown-menu" id="target-menu">
+                    <li><a href="#" data-target="ivybridge">Intel Ivy Bridge</a></li>
+                    <li><a href="#" data-target="haswell">Intel Haswell</a></li>
+                    <li><a href="#" data-target="broadwell">Intel Broadwell</a></li>
+                    <li><a href="#" data-target="skylake">Intel Skylake</a></li>
+                    <li><a href="#" data-target="piledriver">AMD Piledriver</a></li>
+                    <li><a href="#" data-target="steamroller">AMD Steamroller</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="#" data-target="bonnell">Intel Bonnell</a></li>
+                    <li><a href="#" data-target="bobcat">AMD Bobcat</a></li>
+                </ul>
+            </li>
+        </ul>
+        <form class="navbar-form navbar-left">
+            <div class="btn-group">
+                <button type="button" class="btn btn-success" disabled="disabled" id="quickrun">Quick Run</button>
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">Run Options...</span>
+                </button>
+                <ul class="dropdown-menu" id="parameters">
+                    <li class="container-fluid">
+                        <span class="label label-primary slider-label">n</span>
+                        <input id="n-slider" type="text" class="slider" data-slider-min="100" data-slider-max="10000000" data-slider-value="1024" />
+                        <span class="label label-info slider-value" id="n-value">1024</span>
+                    </li>
+                    <li class="container-fluid">
+                        <span class="label label-primary slider-label">incx</span>
+                        <input id="incx-slider" type="text" class="slider" data-slider-min="1" data-slider-max="50" data-slider-step="1" data-slider-value="1" />
+                        <span class="label label-info slider-value" id="incx-value">1</span>
+                    </li>
+                    <li class="container-fluid">
+                        <span class="label label-primary slider-label">incy</span>
+                        <input id="incy-slider" type="text" class="slider" data-slider-min="1" data-slider-max="50" data-slider-step="1" data-slider-value="1" />
+                        <span class="label label-info slider-value" id="incy-value">1</span>
+                    </li>
+                    <li class="container-fluid">
+                        <span class="label label-primary slider-label">offx</span>
+                        <input id="offx-slider" type="text" class="slider" data-slider-min="1" data-slider-max="64" data-slider-step="1" data-slider-value="0" />
+                        <span class="label label-info slider-value" id="offx-value">0</span>
+                    </li>
+                    <li class="container-fluid">
+                        <span class="label label-primary slider-label">offy</span>
+                        <input id="offy-slider" type="text" class="slider" data-slider-min="1" data-slider-max="64" data-slider-step="1" data-slider-value="0" />
+                        <span class="label label-info slider-value" id="offy-value">0</span>
+                    </li>
+                </ul>
+            </div>
+            <!-- <button type="button" class="btn btn-success" id="unittests">Run Unit Tests</button> -->
+            <!-- <button type="button" class="btn btn-success" id="benchmarks">Run Benchmarks</button> -->
+            <button type="button" class="btn btn-success" id="showhidelog" disabled="disabled">Show Log</button>
+        </form>
+        <ul class="nav navbar-nav navbar-right">
+            <img id="logo" src="peachpy.png" />
+            <li><a href="#">About PeachPy</a></li>
+        </ul>
+    </div>
+</nav>
+
+<nav class="navbar navbar-inverse navbar-default navbar-fixed-bottom" id="status">
+</nav>
+
+<div id="editor">n = Argument(size_t)
+x = Argument(ptr(const_float_))
+incx = Argument(size_t)
+y = Argument(ptr(const_float_))
+incy = Argument(size_t)
+
+
+with Function("sdot", (n, x, incx, y, incy), float_) as function:
+    done = Label()
+    unit_stride = Label()
+    nonunit_stride = Label()
+
+    xmm_result = XMMRegister()
+    XORPS(xmm_result, xmm_result)
+
+    reg_n = GeneralPurposeRegister64()
+    LOAD.ARGUMENT(reg_n, n)
+    TEST(reg_n, reg_n)
+    JZ(done)
+
+    reg_x = GeneralPurposeRegister64()
+    LOAD.ARGUMENT(reg_x, x)
+
+    reg_incx = GeneralPurposeRegister64()
+    LOAD.ARGUMENT(reg_incx, incx)
+    TEST(reg_incx, reg_incx)
+    JZ(done)
+    CMP(reg_incx, 1)
+    JNE(nonunit_stride)
+
+    reg_y = GeneralPurposeRegister64()
+    LOAD.ARGUMENT(reg_y, y)
+
+    reg_incy = GeneralPurposeRegister64()
+    LOAD.ARGUMENT(reg_incy, incy)
+    TEST(reg_incy, reg_incy)
+    JZ(done)
+    CMP(reg_incy, 1)
+    JNE(nonunit_stride)
+
+    with LABEL(unit_stride):
+        unroll_registers = 5
+        unroll_elements = unroll_registers * XMMRegister.size / float_.size
+        vector_loop = Loop()
+        scalar_loop = Loop()
+
+        xmm_accs = [xmm_result] + [XMMRegister() for _ in range(unroll_registers - 1)]
+        for xmm_acc in xmm_accs[1:]:
+            XORPS(xmm_acc, xmm_acc)
+
+        SUB(reg_n, unroll_elements)
+        JB(vector_loop.end)
+        with vector_loop:
+            xmm_xs = [XMMRegister() for _ in range(unroll_registers)]
+            xmm_ys = [XMMRegister() for _ in range(unroll_registers)]
+
+            for i, (xmm_x, xmm_y) in enumerate(zip(xmm_xs, xmm_ys)):
+                MOVUPS(xmm_x, [reg_x + XMMRegister.size * i])
+                MOVUPS(xmm_y, [reg_y + XMMRegister.size * i])
+
+            ADD(reg_x, unroll_registers * XMMRegister.size)
+            ADD(reg_y, unroll_registers * XMMRegister.size)
+
+            for xmm_x, xmm_y, xmm_acc in zip(xmm_xs, xmm_ys, xmm_accs):
+                MULPS(xmm_x, xmm_y)
+                ADDPS(xmm_acc, xmm_x)
+
+            SUB(reg_n, unroll_elements)
+            JAE(vector_loop.begin)
+
+        # Reduction of multiple XMM registers into into a single XMM register
+        REDUCE(ADDPS, xmm_accs)
+
+        ADD(reg_n, unroll_elements)
+        JZ(scalar_loop.end)
+
+        with scalar_loop:
+            xmm_scalar_temp = XMMRegister()
+            MOVSS(xmm_scalar_temp, [reg_x])
+            MULSS(xmm_scalar_temp, [reg_y])
+            ADDSS(xmm_result, xmm_scalar_temp)
+
+            ADD(reg_x, float_.size)
+            ADD(reg_y, float_.size)
+
+            SUB(reg_n, 1)
+            JNZ(scalar_loop.begin)
+
+        xmm_temp = XMMRegister()
+        MOVAPS(xmm_temp, xmm_result)
+        MOVHLPS(xmm_result, xmm_result)
+        ADDPS(xmm_result, xmm_temp)
+
+        MOVSS(xmm_temp, xmm_result)
+        SHUFPS(xmm_result, xmm_result, 1)
+        ADDSS(xmm_result, xmm_temp)
+
+    with LABEL(nonunit_stride):
+        unroll_registers = 3
+        unroll_elements = unroll_registers * XMMRegister.size / float_.size
+        vector_loop = Loop("nonunit_stride.vector_loop")
+        scalar_loop = Loop("nonunit_stride.scalar_loop")
+
+        xmm_accs = [xmm_result] + [XMMRegister() for _ in range(unroll_registers - 1)]
+        for xmm_acc in xmm_accs[1:]:
+            XORPS(xmm_acc, xmm_acc)
+
+        SUB(reg_n, unroll_elements)
+        JB(vector_loop.end)
+        with vector_loop:
+            xmm_xs = [XMMRegister() for _ in range(unroll_registers)]
+            xmm_ys = [XMMRegister() for _ in range(unroll_registers)]
+
+            for i, (xmm_x, xmm_y) in enumerate(zip(xmm_xs, xmm_ys)):
+                xmm_x_lanes = [xmm_x] + [XMMRegister() for _ in range(3)]
+                xmm_y_lanes = [xmm_y] + [XMMRegister() for _ in range(3)]
+
+                for l, xmm_x_lane in enumerate(xmm_x_lanes):
+                    MOVSS(xmm_x_lanes[l], [reg_x + XMMRegister.size * i + float_.size * l])
+                    MOVSS(xmm_y_lanes[l], [reg_y + XMMRegister.size * i + float_.size * l])
+                    if l % 2 == 1:
+                        UNPCKLPS(xmm_x_lanes[l - 1], xmm_x_lanes[l])
+                        UNPCKLPS(xmm_y_lanes[l - 1], xmm_y_lanes[l])
+                    if l == 3:
+                        MOVLHPS(xmm_x, xmm_x_lanes[l - 1])
+                        MOVLHPS(xmm_y, xmm_y_lanes[l - 1])
+
+            ADD(reg_x, unroll_registers * XMMRegister.size)
+            ADD(reg_y, unroll_registers * XMMRegister.size)
+
+            for xmm_x, xmm_y, xmm_acc in zip(xmm_xs, xmm_ys, xmm_accs):
+                MULPS(xmm_x, xmm_y)
+                ADDPS(xmm_acc, xmm_x)
+
+            SUB(reg_n, unroll_elements)
+            JAE(vector_loop.begin)
+
+        # Reduction of multiple XMM registers into into a single XMM register
+        REDUCE(ADDPS, xmm_accs)
+
+        ADD(reg_n, unroll_elements)
+        JZ(scalar_loop.end)
+
+        with scalar_loop:
+            xmm_scalar_temp = XMMRegister()
+            MOVSS(xmm_scalar_temp, [reg_x])
+            MULSS(xmm_scalar_temp, [reg_y])
+            ADDSS(xmm_result, xmm_scalar_temp)
+
+            ADD(reg_x, float_.size)
+            ADD(reg_y, float_.size)
+
+            SUB(reg_n, 1)
+            JNZ(scalar_loop.begin)
+
+        xmm_temp = XMMRegister()
+        MOVAPS(xmm_temp, xmm_result)
+        MOVHLPS(xmm_result, xmm_result)
+        ADDPS(xmm_result, xmm_temp)
+
+        MOVSS(xmm_temp, xmm_result)
+        SHUFPS(xmm_result, xmm_result, 1)
+        ADDSS(xmm_result, xmm_temp)
+
+    LABEL(done)
+
+    RETURN(xmm_result)
+</div>
+
+<div id="overlay">
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="peachpy.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/5.1.0/bootstrap-slider.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/mode-python.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/theme-monokai.js" type="text/javascript" charset="utf-8"></script>
+
+<script>
+    var editor = ace.edit("editor");
+    editor.setPrintMarginColumn(120);
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/python");
+</script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-68374411-1', 'auto');
+  ga('send', 'pageview');
+</script></body>
+</html>

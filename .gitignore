@@ -1,0 +1,10 @@
+# Generated files
+node_modules/
+
+# Ignored files
+demos/
+slides/
+
+# Vim backups
+._*
+
