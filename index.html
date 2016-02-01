@@ -168,8 +168,7 @@ incy = Argument(size_t)
 
 with Function("sdot", (n, x, incx, y, incy), float_) as function:
     done = Label()
-    unit_stride = Label()
-    nonunit_stride = Label()
+    nonunit_stride = Block()
 
     xmm_result = XMMRegister()
     XORPS(xmm_result, xmm_result)
@@ -187,7 +186,7 @@ with Function("sdot", (n, x, incx, y, incy), float_) as function:
     TEST(reg_incx, reg_incx)
     JZ(done)
     CMP(reg_incx, 1)
-    JNE(nonunit_stride)
+    JNE(nonunit_stride.begin)
 
     reg_y = GeneralPurposeRegister64()
     LOAD.ARGUMENT(reg_y, y)
@@ -197,11 +196,12 @@ with Function("sdot", (n, x, incx, y, incy), float_) as function:
     TEST(reg_incy, reg_incy)
     JZ(done)
     CMP(reg_incy, 1)
-    JNE(nonunit_stride)
+    JNE(nonunit_stride.begin)
 
-    with LABEL(unit_stride):
+    with Block() as unit_stride:
         unroll_registers = 5
         unroll_elements = unroll_registers * XMMRegister.size / float_.size
+
         vector_loop = Loop()
         scalar_loop = Loop()
 
@@ -256,11 +256,12 @@ with Function("sdot", (n, x, incx, y, incy), float_) as function:
         SHUFPS(xmm_result, xmm_result, 1)
         ADDSS(xmm_result, xmm_temp)
 
-    with LABEL(nonunit_stride):
+    with nonunit_stride:
         unroll_registers = 3
         unroll_elements = unroll_registers * XMMRegister.size / float_.size
-        vector_loop = Loop("nonunit_stride.vector_loop")
-        scalar_loop = Loop("nonunit_stride.scalar_loop")
+
+        vector_loop = Loop()
+        scalar_loop = Loop()
 
         xmm_accs = [xmm_result] + [XMMRegister() for _ in range(unroll_registers - 1)]
         for xmm_acc in xmm_accs[1:]:
