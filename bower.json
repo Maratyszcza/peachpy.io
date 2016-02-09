@@ -1,0 +1,26 @@
+{
+  "name": "peachpy.io",
+  "description": "GT HPC Garage Peachpy project",
+  "main": "index.js",
+  "authors": [
+    "agubba3"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/PeachPy/peachpy.io",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-sass": "^3.3.6",
+    "bootstrap-slider": "*",
+    "d3": "^3.5.14",
+    "ace": "^1.2.3",
+    "bootstrap": "^3.3.6",
+    "ace-builds": "1.2.0"
+  }
+}
