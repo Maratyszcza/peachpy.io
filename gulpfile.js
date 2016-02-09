@@ -9,7 +9,27 @@ var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var htmlmin = require('gulp-htmlmin');
 
+//copy robot.txt
+//copy pyata.tar
+//counts
+
 // Lint Task
+gulp.task('lint', function() {
+    return gulp.src('js/*.js')
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'));
+});
+
+gulp.task('robots', function() {
+    return gulp.src('robots.txt')
+        .pipe(gulp.dest('dist'));
+});
+
+gulp.task('pydata', function() {
+    return gulp.src('pydata.tar')
+        .pipe(gulp.dest('dist'));
+});
+
 gulp.task('lint', function() {
     return gulp.src('js/*.js')
         .pipe(jshint())
@@ -82,7 +102,7 @@ gulp.task('watch', function() {
 });
 
 // Default Task
-gulp.task('default', ['lint', 'sass', 'scripts','scriptspeach', 'html', 'images','nmf', 'pexe', 'watch']);
+gulp.task('default', ['lint', 'sass', 'scripts','scriptspeach', 'html', 'images','nmf', 'pexe', 'watch','robots','pydata']);
 
 
 

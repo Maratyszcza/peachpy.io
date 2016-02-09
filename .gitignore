@@ -4,7 +4,9 @@ node_modules/
 # Ignored files
 demos/
 slides/
-
+bower_components/
+node_modules/
+dist/
 # Vim backups
 ._*
 
