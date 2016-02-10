@@ -530,7 +530,7 @@ var submitFunction = function(binary) {
 	progressMessage += " with n=" + parameters.n + " incx=" + parameters.incx + " incy=" + parameters.incy + " offx=" + parameters.offx + " offy=" + parameters.offy;
 	runProgress = addProgressMessage(progressMessage, "");
 	$.ajax({
-		url: 'http://www.peachpy.io/' + targetId + "/run" + encodeParameters("sdot", getParameters()),
+		url: '/' + targetId + "/run" + encodeParameters("sdot", getParameters()),
 		type: 'POST',
 		contentType: 'application/octet-stream',
 		data: new Uint8Array(binary),
@@ -661,7 +661,62 @@ var loadPeachPy = function() {
 		});
 		document.body.appendChild(peachpy);
 	} else {
-		setProgressStatus("Prerequisites check: Portable Native Client technology is not supported by the browser", false);
+		var request = new XMLHttpRequest();
+		request.open("GET", "peachpy.asm.js", true);
+		request.responseType = "blob";
+
+		var loadPythonText = "Load Python";
+		var initPeachPyText = "Initialize PeachPy";
+		request.addEventListener("progress", function(event) {
+			setProgressStatus(loadPythonText, formatLoadProgress(event));
+		});
+		request.addEventListener("load", function(event) {
+			setProgressStatus(loadPythonText, true);
+			peachpy = new Worker(window.URL.createObjectURL(this.response));
+			peachpy.addEventListener("error", function(event) {
+				$("#status").html("");
+				var statusElement = $("<p>").text("Asm.js Worker crashed").addClass("failed");
+				$("#status").append(statusElement);
+			});
+			peachpy.addEventListener("message", function(event) {
+				var response = event.data;
+				if (response.status === "init") {
+					setProgressStatus(initPeachPyText, true);
+					$("#quickrun").removeAttr("disabled");
+					peachpyReady = true;
+				} else if (response.status === "success") {
+					setProgressIndicator(compilationProgress, true);
+					compilationProgress = null;
+					lastBinary = response.binary;
+					submitFunction(response.binary);
+				} else if (response.status === "error") {
+					setProgressIndicator(compilationProgress, false);
+					compilationProgress = null;
+				} else if (response.status === "stdout") {
+					if (peachpyReady) {
+						var overlay = $("#overlay");
+						overlay.append($("<p>").addClass("stdout").text(response.text));
+					} else {
+						var text = response.text.replace("/lib/python2.7/", "");
+						if (text) {
+							text = text.substring(0, 1).toLowerCase() + text.substring(1);
+							setProgressStatus(initPeachPyText + ": " + text);
+						}
+					}
+				} else {
+					console.log("Unexpected message from PeachPy: " + response);
+					console.log(response);
+				}
+			});
+			loadFileSystem();
+		});
+		request.addEventListener("error", function(event) {
+			setProgressStatus(loadPythonText, false);
+		});
+		request.addEventListener("abort", function(event) {
+			setProgressStatus(loadPythonText, false);
+		});
+		request.send(null);
 	}
 }
 

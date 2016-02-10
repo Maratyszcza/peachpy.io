@@ -64,6 +64,12 @@ gulp.task('scriptspeach', function() {
         .pipe(gulp.dest('dist'));
 });
 
+gulp.task('scriptsasm', function() {
+    return gulp.src('js/peachpy.asm.js')
+        .pipe(uglify())
+        .pipe(gulp.dest('dist'));
+});
+
 //minify html
 gulp.task('html', function() {
     return gulp.src('index.html')
@@ -102,7 +108,7 @@ gulp.task('watch', function() {
 });
 
 // Default Task
-gulp.task('default', ['lint', 'sass', 'scripts','scriptspeach', 'html', 'images','nmf', 'pexe', 'watch','robots','pydata']);
+gulp.task('default', ['lint', 'sass', 'scripts','scriptspeach', 'html', 'images','nmf', 'pexe', 'watch','robots','pydata','scriptsasm']);
 
 
 
