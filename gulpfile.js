@@ -66,7 +66,6 @@ gulp.task('scriptspeach', function() {
 
 gulp.task('scriptsasm', function() {
     return gulp.src('js/peachpy.asm.js')
-        .pipe(uglify())
         .pipe(gulp.dest('dist'));
 });
 

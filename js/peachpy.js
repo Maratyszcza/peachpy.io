@@ -68,6 +68,7 @@ var ggplotColor = function(i, n) {
 }
 
 var addOverlayBarPlot = function(dataset, label, title, options) {
+	console.log(dataset);
 	if (typeof options === "undefined") {
 		options = {};
 	}
@@ -88,10 +89,15 @@ var addOverlayBarPlot = function(dataset, label, title, options) {
 	var svgHeight = 300;
 	var plotHeight = svgHeight - margin.bottom - margin.top;
 
+
+
 	var barplot = d3.select("#overlay")
 		.append("svg")
 		.attr("width", svgWidth)
-		.attr("height", svgHeight);
+		.attr("height", svgHeight)
+
+
+
 	var barplotColumns = barplot.selectAll("rect")
 		.data(dataset)
 		.enter();
@@ -101,12 +107,36 @@ var addOverlayBarPlot = function(dataset, label, title, options) {
 		.domain([0, maxValue])
 		.range([0, plotHeight]);
 
+    var tip = d3.tip()
+      .attr('class', 'd3-tip')
+      .offset([40, 0])
+      .html(function(d) {
+        return "<strong>Count:</strong> <span style='color:red'>" + d.value + "</span>";
+      })
+
+ 	barplot.call(tip);
+
 	barplotColumns.append("rect")
 		.attr("x", function(d, i) { return margin.left + i * (columnWidth + columnSeparator); })
 		.attr("y", function(d) { return plotHeight + margin.top - scale(d.value); })
+		.attr("class", "bar")
 		.attr("width", columnWidth)
 		.attr("height", function(d) { return scale(d.value); })
-		.style("fill", function(d, i) { return ggplotColor(i, dataset.length); });
+		.on('mouseover', function(d, i) {
+			console.log(dataset)
+			var name = dataset[i].name
+			barplot.selectAll(".bar").style("opacity", function(d) {
+            return d.name == name ? 1 : 0.5;
+          })
+			tip.show(d,i);
+		})
+		.on('mouseout', function(d, i) {
+			var value = dataset[i].value
+			barplot.selectAll(".bar").style("opacity", 0.5)
+			tip.hide(d,i);
+		})
+		.style("fill", function(d, i) { return ggplotColor(i, dataset.length); })
+
 	barplotColumns.append("text")
 		.attr("x", function(d, i) { return margin.left + i * (columnWidth + columnSeparator) + 0.5 * columnWidth; })
 		.attr("y", svgHeight - 0.3 * margin.bottom)
@@ -530,7 +560,7 @@ var submitFunction = function(binary) {
 	progressMessage += " with n=" + parameters.n + " incx=" + parameters.incx + " incy=" + parameters.incy + " offx=" + parameters.offx + " offy=" + parameters.offy;
 	runProgress = addProgressMessage(progressMessage, "");
 	$.ajax({
-		url: '/' + targetId + "/run" + encodeParameters("sdot", getParameters()),
+		url: 'http://www.peachpy.io/' + targetId + "/run" + encodeParameters("sdot", getParameters()),
 		type: 'POST',
 		contentType: 'application/octet-stream',
 		data: new Uint8Array(binary),
