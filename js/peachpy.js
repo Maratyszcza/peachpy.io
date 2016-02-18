@@ -1,12 +1,16 @@
 var peachpyReady = false;
 
+//New Popup to choose parameters
+//Display actual name
+//Display tooltip when hovering over ports as well as bars
+
 var hideOverlay = function() {
 	var overlay = $("#overlay");
 	overlay.fadeTo(300, 0.0, function() {
 		overlay.hide(0);
-	})
+	});
 	$("#showhidelog").text("Show Log").unbind("click").click(function() { showOverlay(false); });
-}
+};
 
 var showOverlay = function(clearOverlay) {
 	var overlay = $("#overlay");
@@ -15,7 +19,7 @@ var showOverlay = function(clearOverlay) {
 	}
 	overlay.show(0).fadeTo(300, 0.9);
 	$("#showhidelog").removeAttr("disabled").text("Hide Log").unbind("click").click(hideOverlay);
-}
+};
 
 var setProgressIndicator = function(selector, progress) {
 	if (typeof progress === "undefined") {
@@ -111,9 +115,9 @@ var addOverlayBarPlot = function(dataset, label, title, options) {
       .attr('class', 'd3-tip')
       .offset([40, 0])
       .html(function(d) {
-        return "<strong>Count:</strong> <span style='color:red'>" + d.value + "</span>";
+        return "<strong>" + d.tipname +":</strong> <span style='color:red'>" + d.value + "</span>";
       })
-
+	  
  	barplot.call(tip);
 
 	barplotColumns.append("rect")
@@ -126,8 +130,13 @@ var addOverlayBarPlot = function(dataset, label, title, options) {
 			console.log(dataset)
 			var name = dataset[i].name
 			barplot.selectAll(".bar").style("opacity", function(d) {
-            return d.name == name ? 1 : 0.5;
+            return d.name === name ? 1 : 0.5;
           })
+		  	var arr = document.getElementsByClassName("d3-tip");
+			  console.log(arr);
+			  for(var i = 0; i < arr.length; i++) {
+				  arr[i].style.marginTop = "0px";
+			  }
 			tip.show(d,i);
 		})
 		.on('mouseout', function(d, i) {
@@ -142,6 +151,28 @@ var addOverlayBarPlot = function(dataset, label, title, options) {
 		.attr("y", svgHeight - 0.3 * margin.bottom)
 		.style("fill", function(d, i) { return ggplotColor(i, dataset.length); })
 		.style("text-anchor", "middle")
+		.on('mouseover', function(d, i) {
+			console.log(dataset)
+			var name = dataset[i].name
+			barplot.selectAll(".bar").style("opacity", function(d) {
+            return d.name === name ? 1 : 0.5;
+          })
+		  	var arr = document.getElementsByClassName("d3-tip");
+			  console.log(arr);
+			  for(var i = 0; i < arr.length; i++) {
+				  var val = d.value;
+				  if(d.value == 0) {
+					  val = 1;
+				  }
+				  arr[i].style.marginTop = -(d.value%200) - 40 + "px";
+			  }
+			tip.show(d,i);
+		})
+		.on('mouseout', function(d, i) {
+			var value = dataset[i].value
+			barplot.selectAll(".bar").style("opacity", 0.5);
+			tip.hide(d,i);
+		})
 		.text(function(d) { return d.name; });
 
 	barplot.selectAll("text.title")
@@ -212,14 +243,14 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"UOPS_EXECUTED_PORT.PORT_7" in counters)
 	{
 		var portPressure = [
-			{name: "Port 0", value: counters["UOPS_EXECUTED_PORT.PORT_0"]},
-			{name: "Port 1", value: counters["UOPS_EXECUTED_PORT.PORT_1"]},
-			{name: "Port 2", value: counters["UOPS_EXECUTED_PORT.PORT_2"]},
-			{name: "Port 3", value: counters["UOPS_EXECUTED_PORT.PORT_3"]},
-			{name: "Port 4", value: counters["UOPS_EXECUTED_PORT.PORT_4"]},
-			{name: "Port 5", value: counters["UOPS_EXECUTED_PORT.PORT_5"]},
-			{name: "Port 6", value: counters["UOPS_EXECUTED_PORT.PORT_6"]},
-			{name: "Port 7", value: counters["UOPS_EXECUTED_PORT.PORT_7"]},
+			{name: "Port 0",  tipname: "UOPS_EXECUTED_PORT.PORT_0", value: counters["UOPS_EXECUTED_PORT.PORT_0"]},
+			{name: "Port 1", tipname: "UOPS_EXECUTED_PORT.PORT_1", value: counters["UOPS_EXECUTED_PORT.PORT_1"]},
+			{name: "Port 2", tipname: "UOPS_EXECUTED_PORT.PORT_2", value: counters["UOPS_EXECUTED_PORT.PORT_2"]},
+			{name: "Port 3", tipname: "UOPS_EXECUTED_PORT.PORT_3", value: counters["UOPS_EXECUTED_PORT.PORT_3"]},
+			{name: "Port 4", tipname: "UOPS_EXECUTED_PORT.PORT_4", value: counters["UOPS_EXECUTED_PORT.PORT_4"]},
+			{name: "Port 5", tipname: "UOPS_EXECUTED_PORT.PORT_5", value: counters["UOPS_EXECUTED_PORT.PORT_5"]},
+			{name: "Port 6", tipname: "UOPS_EXECUTED_PORT.PORT_6", value: counters["UOPS_EXECUTED_PORT.PORT_6"]},
+			{name: "Port 7", tipname: "UOPS_EXECUTED_PORT.PORT_7", value: counters["UOPS_EXECUTED_PORT.PORT_7"]},
 		];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("UOPS_EXECUTED_PORT.PORT_0"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("UOPS_EXECUTED_PORT.PORT_1"), 1);
@@ -239,12 +270,12 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"UOPS_DISPATCHED_PORT.PORT_5" in counters)
 	{
 		var portPressure = [
-			{name: "Port 0", value: counters["UOPS_DISPATCHED_PORT.PORT_0"]},
-			{name: "Port 1", value: counters["UOPS_DISPATCHED_PORT.PORT_1"]},
-			{name: "Port 2", value: counters["UOPS_DISPATCHED_PORT.PORT_2"]},
-			{name: "Port 3", value: counters["UOPS_DISPATCHED_PORT.PORT_3"]},
-			{name: "Port 4", value: counters["UOPS_DISPATCHED_PORT.PORT_4"]},
-			{name: "Port 5", value: counters["UOPS_DISPATCHED_PORT.PORT_5"]},
+			{name: "Port 0", tipname: "UOPS_DISPATCHED_PORT.PORT_0", value: counters["UOPS_DISPATCHED_PORT.PORT_0"]},
+			{name: "Port 1", tipname: "UOPS_DISPATCHED_PORT.PORT_1",value: counters["UOPS_DISPATCHED_PORT.PORT_1"]},
+			{name: "Port 2", tipname: "UOPS_DISPATCHED_PORT.PORT_2",value: counters["UOPS_DISPATCHED_PORT.PORT_2"]},
+			{name: "Port 3", tipname: "UOPS_DISPATCHED_PORT.PORT_3",value: counters["UOPS_DISPATCHED_PORT.PORT_3"]},
+			{name: "Port 4", tipname: "UOPS_DISPATCHED_PORT.PORT_4",value: counters["UOPS_DISPATCHED_PORT.PORT_4"]},
+			{name: "Port 5", tipname: "UOPS_DISPATCHED_PORT.PORT_5",value: counters["UOPS_DISPATCHED_PORT.PORT_5"]},
 		];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("UOPS_DISPATCHED_PORT.PORT_0"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("UOPS_DISPATCHED_PORT.PORT_1"), 1);
@@ -254,11 +285,11 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		orderedCountersNames.splice(orderedCountersNames.indexOf("UOPS_DISPATCHED_PORT.PORT_5"), 1);
 		if ("UOPS_DISPATCHED_PORT.PORT_6" in counters) {
 			orderedCountersNames.splice(orderedCountersNames.indexOf("UOPS_DISPATCHED_PORT.PORT_6"), 1);
-			portPressure.push({name: "Port 6", value: counters["UOPS_DISPATCHED_PORT.PORT_6"]});
+			portPressure.push({name: "Port 6", tipname: "UOPS_DISPATCHED_PORT.PORT_6",value: counters["UOPS_DISPATCHED_PORT.PORT_6"]});
 		}
 		if ("UOPS_DISPATCHED_PORT.PORT_7" in counters) {
 			orderedCountersNames.splice(orderedCountersNames.indexOf("UOPS_DISPATCHED_PORT.PORT_7"), 1);
-			portPressure.push({name: "Port 7", value: counters["UOPS_DISPATCHED_PORT.PORT_7"]});
+			portPressure.push({name: "Port 7", tipname: "UOPS_DISPATCHED_PORT.PORT_7",value: counters["UOPS_DISPATCHED_PORT.PORT_7"]});
 		}
 		addOverlayBarPlot(portPressure, "Dispatched \u00B5ops", "Port Pressure");
 	}
@@ -266,18 +297,18 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"DISPATCHED_FPU_OPS.PIPE_1" in counters)
 	{
 		var pipePressure = [
-			{name: "Pipe 0", value: counters["DISPATCHED_FPU_OPS.PIPE_0"]},
-			{name: "Pipe 1", value: counters["DISPATCHED_FPU_OPS.PIPE_1"]}
+			{name: "Pipe 0", tipname:"DISPATCHED_FPU_OPS.PIPE_0", value: counters["DISPATCHED_FPU_OPS.PIPE_0"]},
+			{name: "Pipe 1", tipname:"DISPATCHED_FPU_OPS.PIPE_1",value: counters["DISPATCHED_FPU_OPS.PIPE_1"]}
 		];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("DISPATCHED_FPU_OPS.PIPE_0"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("DISPATCHED_FPU_OPS.PIPE_1"), 1);
 		var title = "Pipe\nPressure";
 		if ("DISPATCHED_FPU_OPS.PIPE_2" in counters) {
-			pipePressure.push({name: "Pipe 2", value: counters["DISPATCHED_FPU_OPS.PIPE_2"]});
+			pipePressure.push({name: "Pipe 2",tipname:"DISPATCHED_FPU_OPS.PIPE_2", value: counters["DISPATCHED_FPU_OPS.PIPE_2"]});
 			orderedCountersNames.splice(orderedCountersNames.indexOf("DISPATCHED_FPU_OPS.PIPE_2"), 1);
 			title = "Pipe Pressure";
 			if ("DISPATCHED_FPU_OPS.PIPE_3" in counters) {
-				pipePressure.push({name: "Pipe 3", value: counters["DISPATCHED_FPU_OPS.PIPE_3"]});
+				pipePressure.push({name: "Pipe 3",tipname:"DISPATCHED_FPU_OPS.PIPE_3", value: counters["DISPATCHED_FPU_OPS.PIPE_3"]});
 				orderedCountersNames.splice(orderedCountersNames.indexOf("DISPATCHED_FPU_OPS.PIPE_3"), 1);
 			}
 		}
@@ -293,10 +324,10 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"IDQ.MS_UOPS" in counters)
 	{
 		var uopsSupplied = [
-			{name: "MS", value: counters["IDQ.MS_UOPS"]},
-			{name: "MITE", value: counters["IDQ.MITE_UOPS"] - counters["IDQ.MS_MITE_UOPS"]},
-			{name: "DSB", value: counters["IDQ.DSB_UOPS"] - counters["IDQ.MS_DSB_UOPS"]},
-			{name: "LSD", value: counters["LSD.UOPS"]}
+			{name: "MS",tipname:"IDQ.MS_UOPS", value: counters["IDQ.MS_UOPS"]},
+			{name: "MITE",tipname:"IDQ.MS_UOPS - IDQ.MS_MITE_UOPS", value: counters["IDQ.MITE_UOPS"] - counters["IDQ.MS_MITE_UOPS"]},
+			{name: "DSB", tipname: "IDQ.DSB_UOPS - IDQ.MS_DSB_UOPS",value: counters["IDQ.DSB_UOPS"] - counters["IDQ.MS_DSB_UOPS"]},
+			{name: "LSD", tipname:"LSD.UOPS",value: counters["LSD.UOPS"]}
 		];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("IDQ.MITE_UOPS"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("IDQ.DSB_UOPS"), 1);
@@ -310,8 +341,8 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"MACRO_INSTS.ALL_DECODED" in counters)
 	{
 		var uopsDecoded = [
-			{name: "Simple", value: counters["MACRO_INSTS.ALL_DECODED"] - counters["MACRO_INSTS.CISC_DECODED"]},
-			{name: "Complex", value: counters["MACRO_INSTS.CISC_DECODED"]}
+			{name: "Simple",tipname:"MACRO_INSTS.ALL_DECODED - MACRO_INSTS.CISC_DECODED", value: counters["MACRO_INSTS.ALL_DECODED"] - counters["MACRO_INSTS.CISC_DECODED"]},
+			{name: "Complex",tipname:"MACRO_INSTS.CISC_DECODED", value: counters["MACRO_INSTS.CISC_DECODED"]}
 		];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("MACRO_INSTS.CISC_DECODED"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("MACRO_INSTS.ALL_DECODED"), 1);
@@ -806,5 +837,3 @@ var runCode = function() {
 		});
 	}
 }
-
-var github

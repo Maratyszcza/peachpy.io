@@ -107,7 +107,7 @@ gulp.task('watch', function() {
 });
 
 // Default Task
-gulp.task('default', ['lint', 'sass', 'scripts','scriptspeach', 'html', 'images','nmf', 'pexe', 'watch','robots','pydata','scriptsasm']);
+gulp.task('default', ['sass', 'scripts','scriptspeach', 'html', 'images','nmf', 'pexe', 'watch','robots','pydata','scriptsasm']);
 
 
 
