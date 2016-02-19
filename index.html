@@ -116,6 +116,26 @@
     top: 100%;
     left: 0;
   }
+  .modal-content, .btn, #quickrun, #showhidelog, #n, #incx, #incy, #offx, #offy  {
+    border-radius: 0;
+  }
+  #n, #incx, #incy, #offx, #offy {
+    width: 75%;
+    display: inline;
+    float: right;
+  }
+  label {
+    padding-top: 5px;
+  }
+  #currentn, #currentoffx, #currentoffy, #currentincx, #currentincy {
+    font-weight: bold;
+    display: inline;
+    padding-top: 5px;
+  }
+  .updatebut {
+    float: right;
+    margin-left: 5px;
+  }
 </style>
 </head>
 <body>
@@ -142,48 +162,121 @@
         <form class="navbar-form navbar-left">
             <div class="btn-group">
                 <button type="button" class="btn btn-success" disabled="disabled" id="quickrun">Quick Run</button>
-                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="modal" data-target="#runModal" aria-haspopup="true" aria-expanded="false">
                     <span class="caret"></span>
                     <span class="sr-only">Run Options...</span>
                 </button>
-                <ul class="dropdown-menu" id="parameters">
-                    <li class="container-fluid">
-                        <span class="label label-primary slider-label">n</span>
-                        <input id="n-slider" type="text" class="slider" data-slider-min="100" data-slider-max="10000000" data-slider-value="1024" />
-                        <span class="label label-info slider-value" id="n-value">1024</span>
-                    </li>
-                    <li class="container-fluid">
-                        <span class="label label-primary slider-label">incx</span>
-                        <input id="incx-slider" type="text" class="slider" data-slider-min="1" data-slider-max="50" data-slider-step="1" data-slider-value="1" />
-                        <span class="label label-info slider-value" id="incx-value">1</span>
-                    </li>
-                    <li class="container-fluid">
-                        <span class="label label-primary slider-label">incy</span>
-                        <input id="incy-slider" type="text" class="slider" data-slider-min="1" data-slider-max="50" data-slider-step="1" data-slider-value="1" />
-                        <span class="label label-info slider-value" id="incy-value">1</span>
-                    </li>
-                    <li class="container-fluid">
-                        <span class="label label-primary slider-label">offx</span>
-                        <input id="offx-slider" type="text" class="slider" data-slider-min="1" data-slider-max="64" data-slider-step="1" data-slider-value="0" />
-                        <span class="label label-info slider-value" id="offx-value">0</span>
-                    </li>
-                    <li class="container-fluid">
-                        <span class="label label-primary slider-label">offy</span>
-                        <input id="offy-slider" type="text" class="slider" data-slider-min="1" data-slider-max="64" data-slider-step="1" data-slider-value="0" />
-                        <span class="label label-info slider-value" id="offy-value">0</span>
-                    </li>
-                </ul>
+
             </div>
+
             <!-- <button type="button" class="btn btn-success" id="unittests">Run Unit Tests</button> -->
             <!-- <button type="button" class="btn btn-success" id="benchmarks">Run Benchmarks</button> -->
             <button type="button" class="btn btn-success" id="showhidelog" disabled="disabled">Show Log</button>
         </form>
+
         <ul class="nav navbar-nav navbar-right">
             <img id="logo" src="peachpy.png" />
-            <li><a href="#">About PeachPy</a></li>
+            <li><a data-toggle="modal" data-target="#aboutModal">About PeachPy</a></li>
         </ul>
     </div>
 </nav>
+
+<!-- Modal -->
+<div class="modal fade" id="runModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Set your parameters</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="usr">n:</label>
+          <div id="currentn">1024</div>
+          <button class="updatebut btn">Update</button>
+          <input type="text" class="form-control" placeholder="Enter n" id="n">
+
+        </div>
+        <div class="form-group">
+          <label for="usr">incx:</label>
+          <div id="currentincx">1</div>
+          <button class="updatebut btn">Update</button>
+          <input type="text" class="form-control" placeholder="Enter incx" id="incx">
+           
+        </div>
+        <div class="form-group">
+          <label for="usr">incy:</label>
+          <div id="currentincy">1</div>
+          <button class="updatebut btn">Update</button>
+          <input type="text" class="form-control" placeholder="Enter incy" id="incy">
+           
+        </div>
+        <div class="form-group">
+          <label for="usr">offx:</label>
+          <div id="currentoffx">1</div>
+          <button class="updatebut btn">Update</button>
+          <input type="text" class="form-control" placeholder="Enter offx" id="offx">
+          
+        </div>
+        <div class="form-group">
+          <label for="usr">offy:</label>
+          <div id="currentoffy">1</div>
+          <button class="updatebut btn">Update</button>
+          <input type="text" class="form-control" placeholder="Enter offy" id="offy">
+          
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Back to Main Screen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">About PeachPy</h4>
+      </div>
+      <div class="modal-body">
+        PeachPy is a Python framework for writing high-performance assembly kernels.
+
+PeachPy aims to simplify writing optimized assembly kernels while preserving all optimization opportunities of traditional assembly. Some PeachPy features:
+
+Universal assembly syntax for Windows, Unix, and Golang assembly.
+PeachPy can directly generate ELF, MS COFF and Mach-O object files and assembly listings for Golang toolchain
+Automatic adaption of function to different calling conventions and ABIs.
+Functions for different platforms can be generated from the assembly same source
+Supports Microsoft x64 ABI, System V x86-64 ABI (Linux and OS X), Linux x32 ABI, Native Client x86-64 SFI ABI, Golang AMD64 ABI, Golang AMD64p32 ABI
+Automatic register allocation.
+PeachPy is flexible and lets mix auto-allocated and hardcoded registers in the same code.
+Automation of routine tasks in assembly programming:
+Function prolog and epilog and generated by PeachPy
+De-duplication of data constants (e.g. Constant.float32x4(1.0))
+Analysis of ISA extensions used in a function
+Supports x86-64 instructions up to AVX-512 and SHA
+Including 3dnow!+, XOP, FMA3, FMA4, TBM and BMI2.
+Excluding x87 FPU and most system instructions.
+Rigorously tested with auto-generated tests to produce the same opcodes as binutils.
+Auto-generation of metadata files
+Makefile with module dependencies (-MMD and -MF options)
+C header for the generated functions
+Function metadata in JSON format
+Python-based metaprogramming and code-generation.
+Multiplexing of multiple instruction streams (helpful for software pipelining).
+Compatible with Python 2 and Python 3, CPython and PyPy.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <nav class="navbar navbar-inverse navbar-default navbar-fixed-bottom" id="status">
 </nav>
