@@ -564,11 +564,11 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 }
 
 var getParameters = function() {
-	var n = $("#n-value").text()|0;
-	var incx = $("#incx-value").text()|0;
-	var incy = $("#incy-value").text()|0;
-	var offx = $("#offx-value").text()|0;
-	var offy = $("#offy-value").text()|0;
+	var n = $("#n-value").val()|0;
+	var incx = $("#incx-value").val()|0;
+	var incy = $("#incy-value").val()|0;
+	var offx = $("#offx-value").val()|0;
+	var offy = $("#offy-value").val()|0;
 	return {n:n, incx: incx, incy: incy, offx: offx, offy: offy};
 }
 
