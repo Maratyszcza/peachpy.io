@@ -591,7 +591,7 @@ var submitFunction = function(binary) {
 	progressMessage += " with n=" + parameters.n + " incx=" + parameters.incx + " incy=" + parameters.incy + " offx=" + parameters.offx + " offy=" + parameters.offy;
 	runProgress = addProgressMessage(progressMessage, "");
 	$.ajax({
-		url: 'http://www.peachpy.io/' + targetId + "/run" + encodeParameters("sdot", getParameters()),
+		url: 'http://run.peachpy.io/' + targetId + "/run" + encodeParameters("sdot", getParameters()),
 		type: 'POST',
 		contentType: 'application/octet-stream',
 		data: new Uint8Array(binary),
