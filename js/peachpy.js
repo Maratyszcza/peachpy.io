@@ -124,7 +124,7 @@ var addOverlayBarPlot = function(dataset, label, title, options) {
           		})
 		  	var tooltips = document.getElementsByClassName("d3-tip");
 			for (var i = 0; i < tooltips.length; i++) {
-				  tooltops[i].style.marginTop = "0px";
+				  tooltips[i].style.marginTop = "0px";
 			}
 			tip.show(d,i);
 		})
