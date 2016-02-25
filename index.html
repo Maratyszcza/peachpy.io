@@ -85,54 +85,47 @@
         padding-left: 5px;
         padding-right: 5px;
     }
-  .d3-tip {
-    position: absolute;
-    z-index: 10;
-    line-height: 1;
-    font-weight: bold;
-    padding: 12px;
-    background: rgba(10, 10, 10, 0.3);
-    color: rgba(250, 250, 250, 0.8);
-    border-radius: 2px;
-  }
-  /* Creates a small triangle extender for the tooltip */
-  .d3-tip: after {
-    box-sizing: border-box;
-    display: inline;
-    font-size: 10px;
-    width: 100%;
-    line-height: 1;
-    color: rgba(0, 0, 0, 0.8);
-    content: "\25BC";
-    position: absolute;
-    text-align: center;
-  }
-  /* Style northward tooltips differently */
-  .d3-tip.n: after {
-    margin: -1px 0 0 0;
-    top: 100%;
-    left: 0;
-  }
-  .modal-content, .btn, #quickrun, #showhidelog, #n, #incx, #incy, #offx, #offy  {
-    border-radius: 0;
-  }
-  #n, #incx, #incy, #offx, #offy {
-    width: 75%;
-    display: inline;
-    float: right;
-  }
-  label {
-    padding-top: 5px;
-  }
-  #currentn, #currentoffx, #currentoffy, #currentincx, #currentincy {
-    font-weight: bold;
-    display: inline;
-    padding-top: 5px;
-  }
-  .updatebut {
-    float: right;
-    margin-left: 5px;
-  }
+    .d3-tip {
+        position: absolute;
+        z-index: 10;
+        line-height: 1;
+        font-weight: bold;
+        padding: 12px;
+        background: rgba(10, 10, 10, 0.3);
+        color: rgba(250, 250, 250, 0.8);
+        border-radius: 2px;
+    }
+    /* Creates a small triangle extender for the tooltip */
+    .d3-tip: after {
+        box-sizing: border-box;
+        display: inline;
+        font-size: 10px;
+        width: 100%;
+        line-height: 1;
+        color: rgba(0, 0, 0, 0.8);
+        content: "\25BC";
+        position: absolute;
+        text-align: center;
+    }
+    /* Style northward tooltips differently */
+    .d3-tip.n: after {
+        margin: -1px 0 0 0;
+        top: 100%;
+        left: 0;
+    }
+    #n, #incx, #incy, #offx, #offy {
+        width: 75%;
+        display: inline;
+        float: right;
+    }
+    label {
+        padding-top: 5px;
+    }
+    #currentn, #currentoffx, #currentoffy, #currentincx, #currentincy {
+        font-weight: bold;
+        display: inline;
+        padding-top: 5px;
+    }
 </style>
 </head>
 <body>
@@ -184,47 +177,33 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="parametersLabel">Set your parameters</h4>
+        <h4 class="modal-title" id="parametersLabel">Set SDOT parameters</h4>
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label for="usr">n:</label>
-          <div id="currentn">1024</div>
-          <button class="updatebut btn">Update</button>
+          <label for="n-value">n:</label>
           <input type="text" class="form-control" placeholder="Enter n" id="n-value" value="1024">
+        </div>
 
-        </div>
         <div class="form-group">
-          <label for="usr">incx:</label>
-          <div id="currentincx">1</div>
-          <button class="updatebut btn">Update</button>
-          <input type="text" class="form-control" placeholder="Enter incx" id="incx-value" value="1">
-           
+          <label for="incx-value">incx:</label>
+          <input type="text" class="form-control" placeholder="Enter incx" id="incx-value" value="1">           
         </div>
+
         <div class="form-group">
-          <label for="usr">incy:</label>
-          <div id="currentincy">1</div>
-          <button class="updatebut btn">Update</button>
+          <label for="incy-value">incy:</label>
           <input type="text" class="form-control" placeholder="Enter incy" id="incy-value" value="1">
-           
         </div>
+
         <div class="form-group">
-          <label for="usr">offx:</label>
-          <div id="currentoffx">1</div>
-          <button class="updatebut btn">Update</button>
+          <label for="offx-value">offx:</label>
           <input type="text" class="form-control" placeholder="Enter offx" id="offx-value" value="0">
-          
         </div>
+
         <div class="form-group">
-          <label for="usr">offy:</label>
-          <div id="currentoffy">1</div>
-          <button class="updatebut btn">Update</button>
-          <input type="text" class="form-control" placeholder="Enter offy" id="offy-value" value="0">
-          
+          <label for="offy-value">offy:</label>
+          <input type="text" class="form-control" placeholder="Enter offy" id="offy-value" value="0">          
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Back to Main Screen</button>
       </div>
     </div>
   </div>
