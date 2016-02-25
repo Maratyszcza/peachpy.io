@@ -770,34 +770,6 @@ var loadPeachPy = function() {
 
 $(document).ready(function(e) {
 	$("#quickrun").click(runCode);
-	$("#n-slider")
-		.slider({
-			scale: 'logarithmic',
-			step: 10,
-			tooltip: "hide",
-		}).on("slide", function(event) {
-			$("#n-value").text(event.value);
-		});
-	$("#incx-slider")
-		.slider({tooltip: "hide"})
-		.on("slide", function(event) {
-			$("#incx-value").text(event.value);
-		});
-	$("#incy-slider")
-		.slider({tooltip: "hide"})
-		.on("slide", function(event) {
-			$("#incy-value").text(event.value);
-		});
-	$("#offx-slider")
-		.slider({tooltip: "hide"})
-		.on("slide", function(event) {
-			$("#offx-value").text(event.value);
-		});
-	$("#offy-slider")
-		.slider({tooltip: "hide"})
-		.on("slide", function(event) {
-			$("#offy-value").text(event.value);
-		});
 	loadPeachPy();
 });
 

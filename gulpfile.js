@@ -38,7 +38,7 @@ gulp.task('lint', function() {
 
 // Compile Our Sass
 gulp.task('sass', function() {
-    return gulp.src(['./bower_components/bootstrap/dist/css/bootstrap.min.css', './bower_components/bootstrap/dist/css/bootstrap-theme.min.css', './bower_components/bootstrap-slider/slider.css'])
+    return gulp.src(['./bower_components/bootstrap/dist/css/bootstrap.min.css', './bower_components/bootstrap/dist/css/bootstrap-theme.min.css'])
         .pipe(concat('all.css'))
         .pipe(gulp.dest('dist'));
 });
@@ -47,7 +47,6 @@ gulp.task('sass', function() {
 gulp.task('scripts', function() {
     return gulp.src(['./bower_components/jquery/dist/jquery.min.js'
     	,'./bower_components/bootstrap/dist/js/bootstrap.min.js'
-    	,'./bower_components/bootstrap-slider/bootstrap-slider.js'
     	,'./bower_components/d3/d3.min.js'
     	,'./bower_components/ace-builds/src-min/ace.js'
     	,'./bower_components/ace-builds/src-min/mode-python.js'
