@@ -1,9 +1,5 @@
 var peachpyReady = false;
 
-//New Popup to choose parameters
-//Display actual name
-//Display tooltip when hovering over ports as well as bars
-
 var hideOverlay = function() {
 	var overlay = $("#overlay");
 	overlay.fadeTo(300, 0.0, function() {
@@ -72,7 +68,6 @@ var ggplotColor = function(i, n) {
 }
 
 var addOverlayBarPlot = function(dataset, label, title, options) {
-	console.log(dataset);
 	if (typeof options === "undefined") {
 		options = {};
 	}
@@ -93,14 +88,10 @@ var addOverlayBarPlot = function(dataset, label, title, options) {
 	var svgHeight = 300;
 	var plotHeight = svgHeight - margin.bottom - margin.top;
 
-
-
 	var barplot = d3.select("#overlay")
 		.append("svg")
 		.attr("width", svgWidth)
 		.attr("height", svgHeight)
-
-
 
 	var barplotColumns = barplot.selectAll("rect")
 		.data(dataset)
@@ -111,12 +102,12 @@ var addOverlayBarPlot = function(dataset, label, title, options) {
 		.domain([0, maxValue])
 		.range([0, plotHeight]);
 
-    var tip = d3.tip()
-      .attr('class', 'd3-tip')
-      .offset([40, 0])
-      .html(function(d) {
-        return "<strong>" + d.tipname +":</strong> <span style='color:red'>" + d.value + "</span>";
-      })
+	var tip = d3.tip()
+		.attr('class', 'd3-tip')
+		.offset([40, 0])
+		.html(function(d) {
+			return "<strong>" + d.tipname +":</strong> <span style='color:red'>" + d.value + "</span>";
+		})
 	  
  	barplot.call(tip);
 
@@ -127,16 +118,14 @@ var addOverlayBarPlot = function(dataset, label, title, options) {
 		.attr("width", columnWidth)
 		.attr("height", function(d) { return scale(d.value); })
 		.on('mouseover', function(d, i) {
-			console.log(dataset)
 			var name = dataset[i].name
 			barplot.selectAll(".bar").style("opacity", function(d) {
-            return d.name === name ? 1 : 0.5;
-          })
-		  	var arr = document.getElementsByClassName("d3-tip");
-			  console.log(arr);
-			  for(var i = 0; i < arr.length; i++) {
-				  arr[i].style.marginTop = "0px";
-			  }
+				return d.name === name ? 1 : 0.5;
+          		})
+		  	var tooltips = document.getElementsByClassName("d3-tip");
+			for (var i = 0; i < tooltips.length; i++) {
+				  tooltops[i].style.marginTop = "0px";
+			}
 			tip.show(d,i);
 		})
 		.on('mouseout', function(d, i) {
@@ -152,26 +141,24 @@ var addOverlayBarPlot = function(dataset, label, title, options) {
 		.style("fill", function(d, i) { return ggplotColor(i, dataset.length); })
 		.style("text-anchor", "middle")
 		.on('mouseover', function(d, i) {
-			console.log(dataset)
 			var name = dataset[i].name
 			barplot.selectAll(".bar").style("opacity", function(d) {
-            return d.name === name ? 1 : 0.5;
-          })
-		  	var arr = document.getElementsByClassName("d3-tip");
-			  console.log(arr);
-			  for(var i = 0; i < arr.length; i++) {
-				  var val = d.value;
-				  if(d.value == 0) {
-					  val = 1;
-				  }
-				  arr[i].style.marginTop = -(d.value%200) - 40 + "px";
-			  }
-			tip.show(d,i);
+				return d.name === name ? 1 : 0.5;
+			})
+			var tooltips = document.getElementsByClassName("d3-tip");
+			for (var i = 0; i < tooltips.length; i++) {
+				var val = d.value;
+				if (d.value == 0) {
+					val = 1;
+				}
+				tooltips[i].style.marginTop = -(d.value % 200) - 40 + "px";
+			}
+			tip.show(d, i);
 		})
 		.on('mouseout', function(d, i) {
 			var value = dataset[i].value
 			barplot.selectAll(".bar").style("opacity", 0.5);
-			tip.hide(d,i);
+			tip.hide(d, i);
 		})
 		.text(function(d) { return d.name; });
 
@@ -243,7 +230,7 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"UOPS_EXECUTED_PORT.PORT_7" in counters)
 	{
 		var portPressure = [
-			{name: "Port 0",  tipname: "UOPS_EXECUTED_PORT.PORT_0", value: counters["UOPS_EXECUTED_PORT.PORT_0"]},
+			{name: "Port 0", tipname: "UOPS_EXECUTED_PORT.PORT_0", value: counters["UOPS_EXECUTED_PORT.PORT_0"]},
 			{name: "Port 1", tipname: "UOPS_EXECUTED_PORT.PORT_1", value: counters["UOPS_EXECUTED_PORT.PORT_1"]},
 			{name: "Port 2", tipname: "UOPS_EXECUTED_PORT.PORT_2", value: counters["UOPS_EXECUTED_PORT.PORT_2"]},
 			{name: "Port 3", tipname: "UOPS_EXECUTED_PORT.PORT_3", value: counters["UOPS_EXECUTED_PORT.PORT_3"]},
@@ -271,11 +258,11 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 	{
 		var portPressure = [
 			{name: "Port 0", tipname: "UOPS_DISPATCHED_PORT.PORT_0", value: counters["UOPS_DISPATCHED_PORT.PORT_0"]},
-			{name: "Port 1", tipname: "UOPS_DISPATCHED_PORT.PORT_1",value: counters["UOPS_DISPATCHED_PORT.PORT_1"]},
-			{name: "Port 2", tipname: "UOPS_DISPATCHED_PORT.PORT_2",value: counters["UOPS_DISPATCHED_PORT.PORT_2"]},
-			{name: "Port 3", tipname: "UOPS_DISPATCHED_PORT.PORT_3",value: counters["UOPS_DISPATCHED_PORT.PORT_3"]},
-			{name: "Port 4", tipname: "UOPS_DISPATCHED_PORT.PORT_4",value: counters["UOPS_DISPATCHED_PORT.PORT_4"]},
-			{name: "Port 5", tipname: "UOPS_DISPATCHED_PORT.PORT_5",value: counters["UOPS_DISPATCHED_PORT.PORT_5"]},
+			{name: "Port 1", tipname: "UOPS_DISPATCHED_PORT.PORT_1", value: counters["UOPS_DISPATCHED_PORT.PORT_1"]},
+			{name: "Port 2", tipname: "UOPS_DISPATCHED_PORT.PORT_2", value: counters["UOPS_DISPATCHED_PORT.PORT_2"]},
+			{name: "Port 3", tipname: "UOPS_DISPATCHED_PORT.PORT_3", value: counters["UOPS_DISPATCHED_PORT.PORT_3"]},
+			{name: "Port 4", tipname: "UOPS_DISPATCHED_PORT.PORT_4", value: counters["UOPS_DISPATCHED_PORT.PORT_4"]},
+			{name: "Port 5", tipname: "UOPS_DISPATCHED_PORT.PORT_5", value: counters["UOPS_DISPATCHED_PORT.PORT_5"]},
 		];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("UOPS_DISPATCHED_PORT.PORT_0"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("UOPS_DISPATCHED_PORT.PORT_1"), 1);
@@ -298,17 +285,17 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 	{
 		var pipePressure = [
 			{name: "Pipe 0", tipname:"DISPATCHED_FPU_OPS.PIPE_0", value: counters["DISPATCHED_FPU_OPS.PIPE_0"]},
-			{name: "Pipe 1", tipname:"DISPATCHED_FPU_OPS.PIPE_1",value: counters["DISPATCHED_FPU_OPS.PIPE_1"]}
+			{name: "Pipe 1", tipname:"DISPATCHED_FPU_OPS.PIPE_1", value: counters["DISPATCHED_FPU_OPS.PIPE_1"]}
 		];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("DISPATCHED_FPU_OPS.PIPE_0"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("DISPATCHED_FPU_OPS.PIPE_1"), 1);
 		var title = "Pipe\nPressure";
 		if ("DISPATCHED_FPU_OPS.PIPE_2" in counters) {
-			pipePressure.push({name: "Pipe 2",tipname:"DISPATCHED_FPU_OPS.PIPE_2", value: counters["DISPATCHED_FPU_OPS.PIPE_2"]});
+			pipePressure.push({name: "Pipe 2", tipname:"DISPATCHED_FPU_OPS.PIPE_2", value: counters["DISPATCHED_FPU_OPS.PIPE_2"]});
 			orderedCountersNames.splice(orderedCountersNames.indexOf("DISPATCHED_FPU_OPS.PIPE_2"), 1);
 			title = "Pipe Pressure";
 			if ("DISPATCHED_FPU_OPS.PIPE_3" in counters) {
-				pipePressure.push({name: "Pipe 3",tipname:"DISPATCHED_FPU_OPS.PIPE_3", value: counters["DISPATCHED_FPU_OPS.PIPE_3"]});
+				pipePressure.push({name: "Pipe 3", tipname:"DISPATCHED_FPU_OPS.PIPE_3", value: counters["DISPATCHED_FPU_OPS.PIPE_3"]});
 				orderedCountersNames.splice(orderedCountersNames.indexOf("DISPATCHED_FPU_OPS.PIPE_3"), 1);
 			}
 		}
@@ -324,10 +311,10 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"IDQ.MS_UOPS" in counters)
 	{
 		var uopsSupplied = [
-			{name: "MS",tipname:"IDQ.MS_UOPS", value: counters["IDQ.MS_UOPS"]},
-			{name: "MITE",tipname:"IDQ.MS_UOPS - IDQ.MS_MITE_UOPS", value: counters["IDQ.MITE_UOPS"] - counters["IDQ.MS_MITE_UOPS"]},
-			{name: "DSB", tipname: "IDQ.DSB_UOPS - IDQ.MS_DSB_UOPS",value: counters["IDQ.DSB_UOPS"] - counters["IDQ.MS_DSB_UOPS"]},
-			{name: "LSD", tipname:"LSD.UOPS",value: counters["LSD.UOPS"]}
+			{name: "MS", tipname: "IDQ.MS_UOPS", value: counters["IDQ.MS_UOPS"]},
+			{name: "MITE",tipname: "IDQ.MS_UOPS - IDQ.MS_MITE_UOPS", value: counters["IDQ.MITE_UOPS"] - counters["IDQ.MS_MITE_UOPS"]},
+			{name: "DSB", tipname: "IDQ.DSB_UOPS - IDQ.MS_DSB_UOPS", value: counters["IDQ.DSB_UOPS"] - counters["IDQ.MS_DSB_UOPS"]},
+			{name: "LSD", tipname: "LSD.UOPS", value: counters["LSD.UOPS"]}
 		];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("IDQ.MITE_UOPS"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("IDQ.DSB_UOPS"), 1);
@@ -341,8 +328,8 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"MACRO_INSTS.ALL_DECODED" in counters)
 	{
 		var uopsDecoded = [
-			{name: "Simple",tipname:"MACRO_INSTS.ALL_DECODED - MACRO_INSTS.CISC_DECODED", value: counters["MACRO_INSTS.ALL_DECODED"] - counters["MACRO_INSTS.CISC_DECODED"]},
-			{name: "Complex",tipname:"MACRO_INSTS.CISC_DECODED", value: counters["MACRO_INSTS.CISC_DECODED"]}
+			{name: "Simple", tipname: "MACRO_INSTS.ALL_DECODED - MACRO_INSTS.CISC_DECODED", value: counters["MACRO_INSTS.ALL_DECODED"] - counters["MACRO_INSTS.CISC_DECODED"]},
+			{name: "Complex", tipname: "MACRO_INSTS.CISC_DECODED", value: counters["MACRO_INSTS.CISC_DECODED"]}
 		];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("MACRO_INSTS.CISC_DECODED"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("MACRO_INSTS.ALL_DECODED"), 1);
@@ -582,7 +569,7 @@ var encodeParameters = function(kernel, parameters) {
 	return urlString;
 }
 
-var submitFunction = function(binary) {
+var submitKernel = function(binary) {
 	var target = $("#target-label");
 	var targetDescription = target.text();
 	var targetId = target.data("target");
@@ -697,7 +684,7 @@ var loadPeachPy = function() {
 				setProgressIndicator(compilationProgress, true);
 				compilationProgress = null;
 				lastBinary = response.binary;
-				submitFunction(response.binary);
+				submitKernel(response.binary);
 			} else if (response.status === "error") {
 				setProgressIndicator(compilationProgress, false);
 				compilationProgress = null;
@@ -749,7 +736,7 @@ var loadPeachPy = function() {
 					setProgressIndicator(compilationProgress, true);
 					compilationProgress = null;
 					lastBinary = response.binary;
-					submitFunction(response.binary);
+					submitKernel(response.binary);
 				} else if (response.status === "error") {
 					setProgressIndicator(compilationProgress, false);
 					compilationProgress = null;
@@ -824,7 +811,7 @@ var runCode = function() {
 	var code = editor.getValue();
 	if ((code === lastCode) && lastBinary) {
 		showOverlay(false);
-		submitFunction(lastBinary);
+		submitKernel(lastBinary);
 	} else {
 		showOverlay(true);
 		lastCode = code;
