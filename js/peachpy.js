@@ -628,7 +628,7 @@ var initPeachPy = function(filesystem) {
 
 var loadFileSystem = function() {
 	var request = new XMLHttpRequest();
-	request.open("GET", "/pydata.tar", true);
+	request.open("GET", "pydata.tar", true);
 	request.responseType = "arraybuffer";
 
 	var statusText = "Load PeachPy file system";

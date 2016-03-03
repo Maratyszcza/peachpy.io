@@ -21,12 +21,6 @@ gulp.task('resources', function() {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('lint', function() {
-    return gulp.src('js/*.js')
-        .pipe(jshint())
-        .pipe(jshint.reporter('default'));
-});
-
 // Compile Our Sass
 gulp.task('sass', function() {
     return gulp.src(['./bower_components/bootstrap/dist/css/bootstrap.min.css', './bower_components/bootstrap/dist/css/bootstrap-theme.min.css'])
@@ -41,7 +35,8 @@ gulp.task('scripts', function() {
     	,'./bower_components/d3/d3.min.js'
     	,'./bower_components/ace-builds/src-min/ace.js'
     	,'./bower_components/ace-builds/src-min/mode-python.js'
-    	,'./bower_components/ace-builds/src-min/theme-monokai.js'])
+    	,'./bower_components/ace-builds/src-min/theme-monokai.js'
+        ,'./bower_components/d3-tip/index.js'])
         .pipe(concat('all.js'))
         .pipe(uglify())
         .pipe(gulp.dest('dist'));
@@ -70,5 +65,5 @@ gulp.task('watch', function() {
 });
 
 // Default Task
-gulp.task('default', ['sass', 'scripts', 'html', 'resources']);
+gulp.task('default', ['sass', 'scripts', 'html', 'resources','scriptspeach']);
 
