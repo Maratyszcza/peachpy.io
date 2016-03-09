@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<title>PeachPy Eating Contest</title>
-<link rel="stylesheet" type="text/css" href="all.css">
-<style type="text/css" media="screen">
-    #logo {
+    <head>
+        <title>PeachPy Eating Contest</title>
+        <link rel="stylesheet" type="text/css" href="all.css">
+        <style type="text/css" media="screen">
+        #logo {
         height: 50px;
-    }
-    #editor {
+        }
+        #editor {
         position: absolute;
         top: 50px;
         right: 0;
         bottom: 25px;
         left: 0;
-    }
-    #overlay {
+        }
+        #overlay {
         padding: 20px;
         font-family: monospace;
         background: black;
@@ -28,51 +28,51 @@
         display: none;
         z-index: 7;
         overflow: scroll;
-    }
-    #overlay p {
+        }
+        #overlay p {
         color: lime;
         margin: 0;
-    }
-    #overlay p.loading {
+        }
+        #overlay p.loading {
         margin-left: 20px;
-    }
-    #overlay p.report {
+        }
+        #overlay p.report {
         margin-left: 20px;
         color: cyan;
-    }
-    p.progress {
+        }
+        p.progress {
         float: right;
         background: transparent;
-    }
-    #overlay p.stdout {
+        }
+        #overlay p.stdout {
         margin-left: 20px;
         color: yellow;
-    }
-    #overlay svg {
+        }
+        #overlay svg {
         margin: 20px;
         font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-    }
-    #status {
+        }
+        #status {
         height: 25px;
         min-height: 25px;
         color: limegreen;
-    }
-    #status p {
+        }
+        #status p {
         margin: auto 20px;
-    }
-    #status p.failed, #overlay p.failed {
+        }
+        #status p.failed, #overlay p.failed {
         color: red;
-    }
-    #parameters {
+        }
+        #parameters {
         min-width: 350px;
-    }
-    #parameters .container-fluid {
+        }
+        #parameters .container-fluid {
         text-align: center;
         height: 30px;
         padding-left: 5px;
         padding-right: 5px;
-    }
-    .d3-tip {
+        }
+        .d3-tip {
         position: absolute;
         z-index: 10;
         line-height: 1;
@@ -81,9 +81,9 @@
         background: rgba(10, 10, 10, 0.3);
         color: rgba(250, 250, 250, 0.8);
         border-radius: 2px;
-    }
-    /* Creates a small triangle extender for the tooltip */
-    .d3-tip: after {
+        }
+        /* Creates a small triangle extender for the tooltip */
+        .d3-tip: after {
         box-sizing: border-box;
         display: inline;
         font-size: 10px;
@@ -93,321 +93,262 @@
         content: "\25BC";
         position: absolute;
         text-align: center;
-    }
-    /* Style northward tooltips differently */
-    .d3-tip.n: after {
+        }
+        /* Style northward tooltips differently */
+        .d3-tip.n: after {
         margin: -1px 0 0 0;
         top: 100%;
         left: 0;
-    }
-    #n, #incx, #incy, #offx, #offy {
+        }
+        #n, #incx, #incy, #offx, #offy {
         width: 75%;
         display: inline;
         float: right;
-    }
-    label {
+        }
+        label {
         padding-top: 5px;
-    }
-    #currentn, #currentoffx, #currentoffy, #currentincx, #currentincy {
+        }
+        #currentn, #currentoffx, #currentoffy, #currentincx, #currentincy {
         font-weight: bold;
         display: inline;
         padding-top: 5px;
-    }
-</style>
-</head>
-<body>
-
-<nav class="navbar navbar-inverse navbar-default navbar-static-top">
-    <div class="container-fluid">
-        <ul class="nav navbar-nav">
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Target: <span id="target-label" data-target="haswell">Intel Haswell</span> <span class="caret"></span></a>
-                <ul class="dropdown-menu" id="target-menu">
-                    <li><a href="#" data-target="nehalem">Intel Nehalem</a></li>
-                    <li><a href="#" data-target="ivybridge">Intel Ivy Bridge</a></li>
-                    <li><a href="#" data-target="haswell">Intel Haswell</a></li>
-                    <li><a href="#" data-target="broadwell">Intel Broadwell</a></li>
-                    <li><a href="#" data-target="skylake">Intel Skylake</a></li>
-                    <li><a href="#" data-target="piledriver">AMD Piledriver</a></li>
-                    <li><a href="#" data-target="steamroller">AMD Steamroller</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="#" data-target="bonnell">Intel Bonnell</a></li>
-                    <li><a href="#" data-target="bobcat">AMD Bobcat</a></li>
+        }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse navbar-default navbar-static-top">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Target: <span id="target-label" data-target="haswell">Intel Haswell</span> <span class="caret"></span></a>
+                        <ul class="dropdown-menu" id="target-menu">
+                            <li><a href="#" data-target="nehalem">Intel Nehalem</a></li>
+                            <li><a href="#" data-target="ivybridge">Intel Ivy Bridge</a></li>
+                            <li><a href="#" data-target="haswell">Intel Haswell</a></li>
+                            <li><a href="#" data-target="broadwell">Intel Broadwell</a></li>
+                            <li><a href="#" data-target="skylake">Intel Skylake</a></li>
+                            <li><a href="#" data-target="piledriver">AMD Piledriver</a></li>
+                            <li><a href="#" data-target="steamroller">AMD Steamroller</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#" data-target="bonnell">Intel Bonnell</a></li>
+                            <li><a href="#" data-target="bobcat">AMD Bobcat</a></li>
+                        </ul>
+                    </li>
                 </ul>
-            </li>
-        </ul>
-        <form class="navbar-form navbar-left">
-            <div class="btn-group">
-                <button type="button" class="btn btn-success" disabled="disabled" id="quickrun">Quick Run</button>
-                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="modal" data-target="#runModal" aria-haspopup="true" aria-expanded="false">
-                    <span class="caret"></span>
-                    <span class="sr-only">Run Options...</span>
-                </button>
-
+                <form class="navbar-form navbar-left">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-success" disabled="disabled" id="quickrun">Quick Run</button>
+                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="modal" data-target="#runModal" aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Run Options...</span>
+                        </button>
+                    </div>
+                    <!-- <button type="button" class="btn btn-success" id="unittests">Run Unit Tests</button> -->
+                    <!-- <button type="button" class="btn btn-success" id="benchmarks">Run Benchmarks</button> -->
+                    <button type="button" class="btn btn-success" id="showhidelog" disabled="disabled">Show Log</button>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+                    <img id="logo" src="peachpy.png" />
+                    <li><a data-toggle="modal" data-target="#aboutModal">About PeachPy</a></li>
+                </ul>
             </div>
-
-            <!-- <button type="button" class="btn btn-success" id="unittests">Run Unit Tests</button> -->
-            <!-- <button type="button" class="btn btn-success" id="benchmarks">Run Benchmarks</button> -->
-            <button type="button" class="btn btn-success" id="showhidelog" disabled="disabled">Show Log</button>
-        </form>
-
-        <ul class="nav navbar-nav navbar-right">
-            <img id="logo" src="peachpy.png" />
-            <li><a data-toggle="modal" data-target="#aboutModal">About PeachPy</a></li>
-        </ul>
-    </div>
-</nav>
-
-<!-- Modal -->
-<div class="modal fade" id="runModal" tabindex="-1" role="dialog" aria-labelledby="parametersLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="parametersLabel">Set SDOT parameters</h4>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="n-value">n:</label>
-          <input type="text" class="form-control" placeholder="Enter n" id="n-value" value="1024">
+        </nav>
+        <!-- Modal -->
+        <div class="modal fade" id="runModal" tabindex="-1" role="dialog" aria-labelledby="parametersLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="parametersLabel">Set SDOT parameters</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="n-value">n:</label>
+                            <input type="text" class="form-control" placeholder="Enter n" id="n-value" value="1024">
+                        </div>
+                        <div class="form-group">
+                            <label for="incx-value">incx:</label>
+                            <input type="text" class="form-control" placeholder="Enter incx" id="incx-value" value="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="incy-value">incy:</label>
+                            <input type="text" class="form-control" placeholder="Enter incy" id="incy-value" value="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="offx-value">offx:</label>
+                            <input type="text" class="form-control" placeholder="Enter offx" id="offx-value" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="offy-value">offy:</label>
+                            <input type="text" class="form-control" placeholder="Enter offy" id="offy-value" value="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div class="form-group">
-          <label for="incx-value">incx:</label>
-          <input type="text" class="form-control" placeholder="Enter incx" id="incx-value" value="1">           
+        <!-- Modal -->
+        <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="aboutLabel">About PeachPy</h4>
+                    </div>
+                    <div class="modal-body">
+                        PeachPy.io is a cloud-based code tuning infrastructure developed at the Georgia Institute of Technology.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div class="form-group">
-          <label for="incy-value">incy:</label>
-          <input type="text" class="form-control" placeholder="Enter incy" id="incy-value" value="1">
-        </div>
-
-        <div class="form-group">
-          <label for="offx-value">offx:</label>
-          <input type="text" class="form-control" placeholder="Enter offx" id="offx-value" value="0">
-        </div>
-
-        <div class="form-group">
-          <label for="offy-value">offy:</label>
-          <input type="text" class="form-control" placeholder="Enter offy" id="offy-value" value="0">          
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- Modal -->
-<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="aboutLabel">About PeachPy</h4>
-      </div>
-      <div class="modal-body">
-        PeachPy.io is a cloud-based code tuning infrastructure developed at the Georgia Institute of Technology.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<nav class="navbar navbar-inverse navbar-default navbar-fixed-bottom" id="status">
-</nav>
-
-<div id="editor">n = Argument(size_t)
-x = Argument(ptr(const_float_))
-incx = Argument(size_t)
-y = Argument(ptr(const_float_))
-incy = Argument(size_t)
-
-
-with Function("sdot", (n, x, incx, y, incy), float_) as function:
-    done = Label()
-    nonunit_stride = Block()
-
-    xmm_result = XMMRegister()
-    XORPS(xmm_result, xmm_result)
-
-    reg_n = GeneralPurposeRegister64()
-    LOAD.ARGUMENT(reg_n, n)
-    TEST(reg_n, reg_n)
-    JZ(done)
-
-    reg_x = GeneralPurposeRegister64()
-    LOAD.ARGUMENT(reg_x, x)
-
-    reg_incx = GeneralPurposeRegister64()
-    LOAD.ARGUMENT(reg_incx, incx)
-    TEST(reg_incx, reg_incx)
-    JZ(done)
-    CMP(reg_incx, 1)
-    JNE(nonunit_stride.begin)
-
-    reg_y = GeneralPurposeRegister64()
-    LOAD.ARGUMENT(reg_y, y)
-
-    reg_incy = GeneralPurposeRegister64()
-    LOAD.ARGUMENT(reg_incy, incy)
-    TEST(reg_incy, reg_incy)
-    JZ(done)
-    CMP(reg_incy, 1)
-    JNE(nonunit_stride.begin)
-
-    with Block() as unit_stride:
-        unroll_registers = 5
-        unroll_elements = unroll_registers * XMMRegister.size / float_.size
-
-        vector_loop = Loop()
-        scalar_loop = Loop()
-
-        xmm_accs = [xmm_result] + [XMMRegister() for _ in range(unroll_registers - 1)]
-        for xmm_acc in xmm_accs[1:]:
+        <nav class="navbar navbar-inverse navbar-default navbar-fixed-bottom" id="status">
+        </nav>
+        <div id="editor">n = Argument(size_t)
+            x = Argument(ptr(const_float_))
+            incx = Argument(size_t)
+            y = Argument(ptr(const_float_))
+            incy = Argument(size_t)
+            with Function("sdot", (n, x, incx, y, incy), float_) as function:
+            done = Label()
+            nonunit_stride = Block()
+            xmm_result = XMMRegister()
+            XORPS(xmm_result, xmm_result)
+            reg_n = GeneralPurposeRegister64()
+            LOAD.ARGUMENT(reg_n, n)
+            TEST(reg_n, reg_n)
+            JZ(done)
+            reg_x = GeneralPurposeRegister64()
+            LOAD.ARGUMENT(reg_x, x)
+            reg_incx = GeneralPurposeRegister64()
+            LOAD.ARGUMENT(reg_incx, incx)
+            TEST(reg_incx, reg_incx)
+            JZ(done)
+            CMP(reg_incx, 1)
+            JNE(nonunit_stride.begin)
+            reg_y = GeneralPurposeRegister64()
+            LOAD.ARGUMENT(reg_y, y)
+            reg_incy = GeneralPurposeRegister64()
+            LOAD.ARGUMENT(reg_incy, incy)
+            TEST(reg_incy, reg_incy)
+            JZ(done)
+            CMP(reg_incy, 1)
+            JNE(nonunit_stride.begin)
+            with Block() as unit_stride:
+            unroll_registers = 5
+            unroll_elements = unroll_registers * XMMRegister.size / float_.size
+            vector_loop = Loop()
+            scalar_loop = Loop()
+            xmm_accs = [xmm_result] + [XMMRegister() for _ in range(unroll_registers - 1)]
+            for xmm_acc in xmm_accs[1:]:
             XORPS(xmm_acc, xmm_acc)
-
-        SUB(reg_n, unroll_elements)
-        JB(vector_loop.end)
-        with vector_loop:
+            SUB(reg_n, unroll_elements)
+            JB(vector_loop.end)
+            with vector_loop:
             xmm_xs = [XMMRegister() for _ in range(unroll_registers)]
             xmm_ys = [XMMRegister() for _ in range(unroll_registers)]
-
             for i, (xmm_x, xmm_y) in enumerate(zip(xmm_xs, xmm_ys)):
-                MOVUPS(xmm_x, [reg_x + XMMRegister.size * i])
-                MOVUPS(xmm_y, [reg_y + XMMRegister.size * i])
-
+            MOVUPS(xmm_x, [reg_x + XMMRegister.size * i])
+            MOVUPS(xmm_y, [reg_y + XMMRegister.size * i])
             ADD(reg_x, unroll_registers * XMMRegister.size)
             ADD(reg_y, unroll_registers * XMMRegister.size)
-
             for xmm_x, xmm_y, xmm_acc in zip(xmm_xs, xmm_ys, xmm_accs):
-                MULPS(xmm_x, xmm_y)
-                ADDPS(xmm_acc, xmm_x)
-
+            MULPS(xmm_x, xmm_y)
+            ADDPS(xmm_acc, xmm_x)
             SUB(reg_n, unroll_elements)
             JAE(vector_loop.begin)
-
-        # Reduction of multiple XMM registers into into a single XMM register
-        REDUCE(ADDPS, xmm_accs)
-
-        ADD(reg_n, unroll_elements)
-        JZ(scalar_loop.end)
-
-        with scalar_loop:
+            # Reduction of multiple XMM registers into into a single XMM register
+            REDUCE(ADDPS, xmm_accs)
+            ADD(reg_n, unroll_elements)
+            JZ(scalar_loop.end)
+            with scalar_loop:
             xmm_scalar_temp = XMMRegister()
             MOVSS(xmm_scalar_temp, [reg_x])
             MULSS(xmm_scalar_temp, [reg_y])
             ADDSS(xmm_result, xmm_scalar_temp)
-
             ADD(reg_x, float_.size)
             ADD(reg_y, float_.size)
-
             SUB(reg_n, 1)
             JNZ(scalar_loop.begin)
-
-        xmm_temp = XMMRegister()
-        MOVAPS(xmm_temp, xmm_result)
-        MOVHLPS(xmm_result, xmm_result)
-        ADDPS(xmm_result, xmm_temp)
-
-        MOVSS(xmm_temp, xmm_result)
-        SHUFPS(xmm_result, xmm_result, 1)
-        ADDSS(xmm_result, xmm_temp)
-
-    with nonunit_stride:
-        unroll_registers = 3
-        unroll_elements = unroll_registers * XMMRegister.size / float_.size
-
-        vector_loop = Loop()
-        scalar_loop = Loop()
-
-        xmm_accs = [xmm_result] + [XMMRegister() for _ in range(unroll_registers - 1)]
-        for xmm_acc in xmm_accs[1:]:
+            xmm_temp = XMMRegister()
+            MOVAPS(xmm_temp, xmm_result)
+            MOVHLPS(xmm_result, xmm_result)
+            ADDPS(xmm_result, xmm_temp)
+            MOVSS(xmm_temp, xmm_result)
+            SHUFPS(xmm_result, xmm_result, 1)
+            ADDSS(xmm_result, xmm_temp)
+            with nonunit_stride:
+            unroll_registers = 3
+            unroll_elements = unroll_registers * XMMRegister.size / float_.size
+            vector_loop = Loop()
+            scalar_loop = Loop()
+            xmm_accs = [xmm_result] + [XMMRegister() for _ in range(unroll_registers - 1)]
+            for xmm_acc in xmm_accs[1:]:
             XORPS(xmm_acc, xmm_acc)
-
-        SUB(reg_n, unroll_elements)
-        JB(vector_loop.end)
-        with vector_loop:
+            SUB(reg_n, unroll_elements)
+            JB(vector_loop.end)
+            with vector_loop:
             xmm_xs = [XMMRegister() for _ in range(unroll_registers)]
             xmm_ys = [XMMRegister() for _ in range(unroll_registers)]
-
             for i, (xmm_x, xmm_y) in enumerate(zip(xmm_xs, xmm_ys)):
-                xmm_x_lanes = [xmm_x] + [XMMRegister() for _ in range(3)]
-                xmm_y_lanes = [xmm_y] + [XMMRegister() for _ in range(3)]
-
-                for l, xmm_x_lane in enumerate(xmm_x_lanes):
-                    MOVSS(xmm_x_lanes[l], [reg_x + XMMRegister.size * i + float_.size * l])
-                    MOVSS(xmm_y_lanes[l], [reg_y + XMMRegister.size * i + float_.size * l])
-                    if l % 2 == 1:
-                        UNPCKLPS(xmm_x_lanes[l - 1], xmm_x_lanes[l])
-                        UNPCKLPS(xmm_y_lanes[l - 1], xmm_y_lanes[l])
-                    if l == 3:
-                        MOVLHPS(xmm_x, xmm_x_lanes[l - 1])
-                        MOVLHPS(xmm_y, xmm_y_lanes[l - 1])
-
+            xmm_x_lanes = [xmm_x] + [XMMRegister() for _ in range(3)]
+            xmm_y_lanes = [xmm_y] + [XMMRegister() for _ in range(3)]
+            for l, xmm_x_lane in enumerate(xmm_x_lanes):
+            MOVSS(xmm_x_lanes[l], [reg_x + XMMRegister.size * i + float_.size * l])
+            MOVSS(xmm_y_lanes[l], [reg_y + XMMRegister.size * i + float_.size * l])
+            if l % 2 == 1:
+            UNPCKLPS(xmm_x_lanes[l - 1], xmm_x_lanes[l])
+            UNPCKLPS(xmm_y_lanes[l - 1], xmm_y_lanes[l])
+            if l == 3:
+            MOVLHPS(xmm_x, xmm_x_lanes[l - 1])
+            MOVLHPS(xmm_y, xmm_y_lanes[l - 1])
             ADD(reg_x, unroll_registers * XMMRegister.size)
             ADD(reg_y, unroll_registers * XMMRegister.size)
-
             for xmm_x, xmm_y, xmm_acc in zip(xmm_xs, xmm_ys, xmm_accs):
-                MULPS(xmm_x, xmm_y)
-                ADDPS(xmm_acc, xmm_x)
-
+            MULPS(xmm_x, xmm_y)
+            ADDPS(xmm_acc, xmm_x)
             SUB(reg_n, unroll_elements)
             JAE(vector_loop.begin)
-
-        # Reduction of multiple XMM registers into into a single XMM register
-        REDUCE(ADDPS, xmm_accs)
-
-        ADD(reg_n, unroll_elements)
-        JZ(scalar_loop.end)
-
-        with scalar_loop:
+            # Reduction of multiple XMM registers into into a single XMM register
+            REDUCE(ADDPS, xmm_accs)
+            ADD(reg_n, unroll_elements)
+            JZ(scalar_loop.end)
+            with scalar_loop:
             xmm_scalar_temp = XMMRegister()
             MOVSS(xmm_scalar_temp, [reg_x])
             MULSS(xmm_scalar_temp, [reg_y])
             ADDSS(xmm_result, xmm_scalar_temp)
-
             ADD(reg_x, float_.size)
             ADD(reg_y, float_.size)
-
             SUB(reg_n, 1)
             JNZ(scalar_loop.begin)
-
-        xmm_temp = XMMRegister()
-        MOVAPS(xmm_temp, xmm_result)
-        MOVHLPS(xmm_result, xmm_result)
-        ADDPS(xmm_result, xmm_temp)
-
-        MOVSS(xmm_temp, xmm_result)
-        SHUFPS(xmm_result, xmm_result, 1)
-        ADDSS(xmm_result, xmm_temp)
-
-    LABEL(done)
-
-    RETURN(xmm_result)
-</div>
-
-<div id="overlay">
-</div>
-
-<script src="all.js" type="text/javascript" charset="utf-8"></script>
-<script src="peachpy.min.js" type="text/javascript" charset="utf-8"></script>
-
-<script>
-    var editor = ace.edit("editor");
-    editor.setPrintMarginColumn(120);
-    editor.setTheme("ace/theme/monokai");
-    editor.getSession().setMode("ace/mode/python");
-</script>
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-68374411-1', 'auto');
-  ga('send', 'pageview');
-</script></body>
+            xmm_temp = XMMRegister()
+            MOVAPS(xmm_temp, xmm_result)
+            MOVHLPS(xmm_result, xmm_result)
+            ADDPS(xmm_result, xmm_temp)
+            MOVSS(xmm_temp, xmm_result)
+            SHUFPS(xmm_result, xmm_result, 1)
+            ADDSS(xmm_result, xmm_temp)
+            LABEL(done)
+            RETURN(xmm_result)
+        </div>
+        <div id="overlay">
+        </div>
+        <script src="all.js" type="text/javascript" charset="utf-8"></script>
+        <script src="peachpy.min.js" type="text/javascript" charset="utf-8"></script>
+        <script>
+        var editor = ace.edit("editor");
+        editor.setPrintMarginColumn(120);
+        editor.setTheme("ace/theme/monokai");
+        editor.getSession().setMode("ace/mode/python");
+        </script>
+        <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-68374411-1', 'auto');
+        ga('send', 'pageview');
+    </script></body>
 </html>

@@ -5,7 +5,9 @@ var hideOverlay = function() {
 	overlay.fadeTo(300, 0.0, function() {
 		overlay.hide(0);
 	});
-	$("#showhidelog").text("Show Log").unbind("click").click(function() { showOverlay(false); });
+	$("#showhidelog").text("Show Log").unbind("click").click(function() {
+		showOverlay(false);
+	});
 };
 
 var showOverlay = function(clearOverlay) {
@@ -97,7 +99,9 @@ var addOverlayBarPlot = function(dataset, label, title, options) {
 		.data(dataset)
 		.enter();
 
-	var maxValue = d3.max(dataset, function(d) { return d.value; });
+	var maxValue = d3.max(dataset, function(d) {
+		return d.value;
+	});
 	var scale = d3.scale.linear()
 		.domain([0, maxValue])
 		.range([0, plotHeight]);
@@ -106,39 +110,51 @@ var addOverlayBarPlot = function(dataset, label, title, options) {
 		.attr('class', 'd3-tip')
 		.offset([40, 0])
 		.html(function(d) {
-			return "<strong>" + d.tipname +":</strong> <span style='color:red'>" + d.value + "</span>";
+			return "<strong>" + d.tipname + ":</strong> <span style='color:red'>" + d.value + "</span>";
 		})
-	  
- 	barplot.call(tip);
+
+	barplot.call(tip);
 
 	barplotColumns.append("rect")
-		.attr("x", function(d, i) { return margin.left + i * (columnWidth + columnSeparator); })
-		.attr("y", function(d) { return plotHeight + margin.top - scale(d.value); })
+		.attr("x", function(d, i) {
+			return margin.left + i * (columnWidth + columnSeparator);
+		})
+		.attr("y", function(d) {
+			return plotHeight + margin.top - scale(d.value);
+		})
 		.attr("class", "bar")
 		.attr("width", columnWidth)
-		.attr("height", function(d) { return scale(d.value); })
+		.attr("height", function(d) {
+			return scale(d.value);
+		})
 		.on('mouseover', function(d, i) {
 			var name = dataset[i].name
 			barplot.selectAll(".bar").style("opacity", function(d) {
 				return d.name === name ? 1 : 0.5;
-          		})
-		  	var tooltips = document.getElementsByClassName("d3-tip");
+			})
+			var tooltips = document.getElementsByClassName("d3-tip");
 			for (var i = 0; i < tooltips.length; i++) {
-				  tooltips[i].style.marginTop = "0px";
+				tooltips[i].style.marginTop = "0px";
 			}
-			tip.show(d,i);
+			tip.show(d, i);
 		})
 		.on('mouseout', function(d, i) {
 			var value = dataset[i].value
 			barplot.selectAll(".bar").style("opacity", 0.5)
-			tip.hide(d,i);
+			tip.hide(d, i);
 		})
-		.style("fill", function(d, i) { return ggplotColor(i, dataset.length); })
+		.style("fill", function(d, i) {
+			return ggplotColor(i, dataset.length);
+		})
 
 	barplotColumns.append("text")
-		.attr("x", function(d, i) { return margin.left + i * (columnWidth + columnSeparator) + 0.5 * columnWidth; })
+		.attr("x", function(d, i) {
+			return margin.left + i * (columnWidth + columnSeparator) + 0.5 * columnWidth;
+		})
 		.attr("y", svgHeight - 0.3 * margin.bottom)
-		.style("fill", function(d, i) { return ggplotColor(i, dataset.length); })
+		.style("fill", function(d, i) {
+			return ggplotColor(i, dataset.length);
+		})
 		.style("text-anchor", "middle")
 		.on('mouseover', function(d, i) {
 			var name = dataset[i].name
@@ -160,19 +176,25 @@ var addOverlayBarPlot = function(dataset, label, title, options) {
 			barplot.selectAll(".bar").style("opacity", 0.5);
 			tip.hide(d, i);
 		})
-		.text(function(d) { return d.name; });
+		.text(function(d) {
+			return d.name;
+		});
 
 	barplot.selectAll("text.title")
 		.data(title.split(/\n/g))
 		.enter()
-			.append("text")
-			.attr("class", "title")
-			.attr("x", 0.5 * svgWidth)
-			.attr("y", function(d, i) { return 5 + (i + 0.5) * 25; } )
-			.style("fill", "white")
-			.style("text-anchor", "middle")
-			.style("font-size", "x-large")
-			.text(function(d) { return d; });
+		.append("text")
+		.attr("class", "title")
+		.attr("x", 0.5 * svgWidth)
+		.attr("y", function(d, i) {
+			return 5 + (i + 0.5) * 25;
+		})
+		.style("fill", "white")
+		.style("text-anchor", "middle")
+		.style("font-size", "x-large")
+		.text(function(d) {
+			return d;
+		});
 
 	barplot.append("text")
 		.attr("y", 0.7 * margin.left)
@@ -227,18 +249,40 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"UOPS_EXECUTED_PORT.PORT_4" in counters &&
 		"UOPS_EXECUTED_PORT.PORT_5" in counters &&
 		"UOPS_EXECUTED_PORT.PORT_6" in counters &&
-		"UOPS_EXECUTED_PORT.PORT_7" in counters)
-	{
-		var portPressure = [
-			{name: "Port 0", tipname: "UOPS_EXECUTED_PORT.PORT_0", value: counters["UOPS_EXECUTED_PORT.PORT_0"]},
-			{name: "Port 1", tipname: "UOPS_EXECUTED_PORT.PORT_1", value: counters["UOPS_EXECUTED_PORT.PORT_1"]},
-			{name: "Port 2", tipname: "UOPS_EXECUTED_PORT.PORT_2", value: counters["UOPS_EXECUTED_PORT.PORT_2"]},
-			{name: "Port 3", tipname: "UOPS_EXECUTED_PORT.PORT_3", value: counters["UOPS_EXECUTED_PORT.PORT_3"]},
-			{name: "Port 4", tipname: "UOPS_EXECUTED_PORT.PORT_4", value: counters["UOPS_EXECUTED_PORT.PORT_4"]},
-			{name: "Port 5", tipname: "UOPS_EXECUTED_PORT.PORT_5", value: counters["UOPS_EXECUTED_PORT.PORT_5"]},
-			{name: "Port 6", tipname: "UOPS_EXECUTED_PORT.PORT_6", value: counters["UOPS_EXECUTED_PORT.PORT_6"]},
-			{name: "Port 7", tipname: "UOPS_EXECUTED_PORT.PORT_7", value: counters["UOPS_EXECUTED_PORT.PORT_7"]},
-		];
+		"UOPS_EXECUTED_PORT.PORT_7" in counters) {
+		var portPressure = [{
+			name: "Port 0",
+			tipname: "UOPS_EXECUTED_PORT.PORT_0",
+			value: counters["UOPS_EXECUTED_PORT.PORT_0"]
+		}, {
+			name: "Port 1",
+			tipname: "UOPS_EXECUTED_PORT.PORT_1",
+			value: counters["UOPS_EXECUTED_PORT.PORT_1"]
+		}, {
+			name: "Port 2",
+			tipname: "UOPS_EXECUTED_PORT.PORT_2",
+			value: counters["UOPS_EXECUTED_PORT.PORT_2"]
+		}, {
+			name: "Port 3",
+			tipname: "UOPS_EXECUTED_PORT.PORT_3",
+			value: counters["UOPS_EXECUTED_PORT.PORT_3"]
+		}, {
+			name: "Port 4",
+			tipname: "UOPS_EXECUTED_PORT.PORT_4",
+			value: counters["UOPS_EXECUTED_PORT.PORT_4"]
+		}, {
+			name: "Port 5",
+			tipname: "UOPS_EXECUTED_PORT.PORT_5",
+			value: counters["UOPS_EXECUTED_PORT.PORT_5"]
+		}, {
+			name: "Port 6",
+			tipname: "UOPS_EXECUTED_PORT.PORT_6",
+			value: counters["UOPS_EXECUTED_PORT.PORT_6"]
+		}, {
+			name: "Port 7",
+			tipname: "UOPS_EXECUTED_PORT.PORT_7",
+			value: counters["UOPS_EXECUTED_PORT.PORT_7"]
+		}, ];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("UOPS_EXECUTED_PORT.PORT_0"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("UOPS_EXECUTED_PORT.PORT_1"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("UOPS_EXECUTED_PORT.PORT_2"), 1);
@@ -254,16 +298,32 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"UOPS_DISPATCHED_PORT.PORT_2" in counters &&
 		"UOPS_DISPATCHED_PORT.PORT_3" in counters &&
 		"UOPS_DISPATCHED_PORT.PORT_4" in counters &&
-		"UOPS_DISPATCHED_PORT.PORT_5" in counters)
-	{
-		var portPressure = [
-			{name: "Port 0", tipname: "UOPS_DISPATCHED_PORT.PORT_0", value: counters["UOPS_DISPATCHED_PORT.PORT_0"]},
-			{name: "Port 1", tipname: "UOPS_DISPATCHED_PORT.PORT_1", value: counters["UOPS_DISPATCHED_PORT.PORT_1"]},
-			{name: "Port 2", tipname: "UOPS_DISPATCHED_PORT.PORT_2", value: counters["UOPS_DISPATCHED_PORT.PORT_2"]},
-			{name: "Port 3", tipname: "UOPS_DISPATCHED_PORT.PORT_3", value: counters["UOPS_DISPATCHED_PORT.PORT_3"]},
-			{name: "Port 4", tipname: "UOPS_DISPATCHED_PORT.PORT_4", value: counters["UOPS_DISPATCHED_PORT.PORT_4"]},
-			{name: "Port 5", tipname: "UOPS_DISPATCHED_PORT.PORT_5", value: counters["UOPS_DISPATCHED_PORT.PORT_5"]},
-		];
+		"UOPS_DISPATCHED_PORT.PORT_5" in counters) {
+		var portPressure = [{
+			name: "Port 0",
+			tipname: "UOPS_DISPATCHED_PORT.PORT_0",
+			value: counters["UOPS_DISPATCHED_PORT.PORT_0"]
+		}, {
+			name: "Port 1",
+			tipname: "UOPS_DISPATCHED_PORT.PORT_1",
+			value: counters["UOPS_DISPATCHED_PORT.PORT_1"]
+		}, {
+			name: "Port 2",
+			tipname: "UOPS_DISPATCHED_PORT.PORT_2",
+			value: counters["UOPS_DISPATCHED_PORT.PORT_2"]
+		}, {
+			name: "Port 3",
+			tipname: "UOPS_DISPATCHED_PORT.PORT_3",
+			value: counters["UOPS_DISPATCHED_PORT.PORT_3"]
+		}, {
+			name: "Port 4",
+			tipname: "UOPS_DISPATCHED_PORT.PORT_4",
+			value: counters["UOPS_DISPATCHED_PORT.PORT_4"]
+		}, {
+			name: "Port 5",
+			tipname: "UOPS_DISPATCHED_PORT.PORT_5",
+			value: counters["UOPS_DISPATCHED_PORT.PORT_5"]
+		}, ];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("UOPS_DISPATCHED_PORT.PORT_0"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("UOPS_DISPATCHED_PORT.PORT_1"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("UOPS_DISPATCHED_PORT.PORT_2"), 1);
@@ -272,30 +332,50 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		orderedCountersNames.splice(orderedCountersNames.indexOf("UOPS_DISPATCHED_PORT.PORT_5"), 1);
 		if ("UOPS_DISPATCHED_PORT.PORT_6" in counters) {
 			orderedCountersNames.splice(orderedCountersNames.indexOf("UOPS_DISPATCHED_PORT.PORT_6"), 1);
-			portPressure.push({name: "Port 6", tipname: "UOPS_DISPATCHED_PORT.PORT_6",value: counters["UOPS_DISPATCHED_PORT.PORT_6"]});
+			portPressure.push({
+				name: "Port 6",
+				tipname: "UOPS_DISPATCHED_PORT.PORT_6",
+				value: counters["UOPS_DISPATCHED_PORT.PORT_6"]
+			});
 		}
 		if ("UOPS_DISPATCHED_PORT.PORT_7" in counters) {
 			orderedCountersNames.splice(orderedCountersNames.indexOf("UOPS_DISPATCHED_PORT.PORT_7"), 1);
-			portPressure.push({name: "Port 7", tipname: "UOPS_DISPATCHED_PORT.PORT_7",value: counters["UOPS_DISPATCHED_PORT.PORT_7"]});
+			portPressure.push({
+				name: "Port 7",
+				tipname: "UOPS_DISPATCHED_PORT.PORT_7",
+				value: counters["UOPS_DISPATCHED_PORT.PORT_7"]
+			});
 		}
 		addOverlayBarPlot(portPressure, "Dispatched \u00B5ops", "Port Pressure");
 	}
 	if ("DISPATCHED_FPU_OPS.PIPE_0" in counters &&
-		"DISPATCHED_FPU_OPS.PIPE_1" in counters)
-	{
-		var pipePressure = [
-			{name: "Pipe 0", tipname:"DISPATCHED_FPU_OPS.PIPE_0", value: counters["DISPATCHED_FPU_OPS.PIPE_0"]},
-			{name: "Pipe 1", tipname:"DISPATCHED_FPU_OPS.PIPE_1", value: counters["DISPATCHED_FPU_OPS.PIPE_1"]}
-		];
+		"DISPATCHED_FPU_OPS.PIPE_1" in counters) {
+		var pipePressure = [{
+			name: "Pipe 0",
+			tipname: "DISPATCHED_FPU_OPS.PIPE_0",
+			value: counters["DISPATCHED_FPU_OPS.PIPE_0"]
+		}, {
+			name: "Pipe 1",
+			tipname: "DISPATCHED_FPU_OPS.PIPE_1",
+			value: counters["DISPATCHED_FPU_OPS.PIPE_1"]
+		}];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("DISPATCHED_FPU_OPS.PIPE_0"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("DISPATCHED_FPU_OPS.PIPE_1"), 1);
 		var title = "Pipe\nPressure";
 		if ("DISPATCHED_FPU_OPS.PIPE_2" in counters) {
-			pipePressure.push({name: "Pipe 2", tipname:"DISPATCHED_FPU_OPS.PIPE_2", value: counters["DISPATCHED_FPU_OPS.PIPE_2"]});
+			pipePressure.push({
+				name: "Pipe 2",
+				tipname: "DISPATCHED_FPU_OPS.PIPE_2",
+				value: counters["DISPATCHED_FPU_OPS.PIPE_2"]
+			});
 			orderedCountersNames.splice(orderedCountersNames.indexOf("DISPATCHED_FPU_OPS.PIPE_2"), 1);
 			title = "Pipe Pressure";
 			if ("DISPATCHED_FPU_OPS.PIPE_3" in counters) {
-				pipePressure.push({name: "Pipe 3", tipname:"DISPATCHED_FPU_OPS.PIPE_3", value: counters["DISPATCHED_FPU_OPS.PIPE_3"]});
+				pipePressure.push({
+					name: "Pipe 3",
+					tipname: "DISPATCHED_FPU_OPS.PIPE_3",
+					value: counters["DISPATCHED_FPU_OPS.PIPE_3"]
+				});
 				orderedCountersNames.splice(orderedCountersNames.indexOf("DISPATCHED_FPU_OPS.PIPE_3"), 1);
 			}
 		}
@@ -308,14 +388,24 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"LSD.UOPS" in counters &&
 		"IDQ.MS_DSB_UOPS" in counters &&
 		"IDQ.MS_MITE_UOPS" in counters &&
-		"IDQ.MS_UOPS" in counters)
-	{
-		var uopsSupplied = [
-			{name: "MS", tipname: "IDQ.MS_UOPS", value: counters["IDQ.MS_UOPS"]},
-			{name: "MITE",tipname: "IDQ.MS_UOPS - IDQ.MS_MITE_UOPS", value: counters["IDQ.MITE_UOPS"] - counters["IDQ.MS_MITE_UOPS"]},
-			{name: "DSB", tipname: "IDQ.DSB_UOPS - IDQ.MS_DSB_UOPS", value: counters["IDQ.DSB_UOPS"] - counters["IDQ.MS_DSB_UOPS"]},
-			{name: "LSD", tipname: "LSD.UOPS", value: counters["LSD.UOPS"]}
-		];
+		"IDQ.MS_UOPS" in counters) {
+		var uopsSupplied = [{
+			name: "MS",
+			tipname: "IDQ.MS_UOPS",
+			value: counters["IDQ.MS_UOPS"]
+		}, {
+			name: "MITE",
+			tipname: "IDQ.MS_UOPS - IDQ.MS_MITE_UOPS",
+			value: counters["IDQ.MITE_UOPS"] - counters["IDQ.MS_MITE_UOPS"]
+		}, {
+			name: "DSB",
+			tipname: "IDQ.DSB_UOPS - IDQ.MS_DSB_UOPS",
+			value: counters["IDQ.DSB_UOPS"] - counters["IDQ.MS_DSB_UOPS"]
+		}, {
+			name: "LSD",
+			tipname: "LSD.UOPS",
+			value: counters["LSD.UOPS"]
+		}];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("IDQ.MITE_UOPS"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("IDQ.DSB_UOPS"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("LSD.UOPS"), 1);
@@ -325,29 +415,41 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		addOverlayBarPlot(uopsSupplied, "Supplied \u00B5ops", "Front-End\nPerformance");
 	}
 	if ("MACRO_INSTS.CISC_DECODED" in counters &&
-		"MACRO_INSTS.ALL_DECODED" in counters)
-	{
-		var uopsDecoded = [
-			{name: "Simple", tipname: "MACRO_INSTS.ALL_DECODED - MACRO_INSTS.CISC_DECODED", value: counters["MACRO_INSTS.ALL_DECODED"] - counters["MACRO_INSTS.CISC_DECODED"]},
-			{name: "Complex", tipname: "MACRO_INSTS.CISC_DECODED", value: counters["MACRO_INSTS.CISC_DECODED"]}
-		];
+		"MACRO_INSTS.ALL_DECODED" in counters) {
+		var uopsDecoded = [{
+			name: "Simple",
+			tipname: "MACRO_INSTS.ALL_DECODED - MACRO_INSTS.CISC_DECODED",
+			value: counters["MACRO_INSTS.ALL_DECODED"] - counters["MACRO_INSTS.CISC_DECODED"]
+		}, {
+			name: "Complex",
+			tipname: "MACRO_INSTS.CISC_DECODED",
+			value: counters["MACRO_INSTS.CISC_DECODED"]
+		}];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("MACRO_INSTS.CISC_DECODED"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("MACRO_INSTS.ALL_DECODED"), 1);
-		addOverlayBarPlot(uopsDecoded, "Decoded \u00B5ops", "Front-End\nPerformance", {columnWidth: 60});
+		addOverlayBarPlot(uopsDecoded, "Decoded \u00B5ops", "Front-End\nPerformance", {
+			columnWidth: 60
+		});
 	}
 
 	/* Analyze and visualize stalls */
 	if ("INSTRUCTION_FETCH_STALL" in counters &&
-		"MEM_STALL_CYCLES.RSQ_FULL" in counters)
-	{
-		var cycles = [
-			{name: "Execution", value: counters["Cycles"]},
-			{name: "RSQ Full", value: counters["MEM_STALL_CYCLES.RSQ_FULL"]},
-			{name: "Instr Fetch", value: counters["INSTRUCTION_FETCH_STALL"]}
-		];
+		"MEM_STALL_CYCLES.RSQ_FULL" in counters) {
+		var cycles = [{
+			name: "Execution",
+			value: counters["Cycles"]
+		}, {
+			name: "RSQ Full",
+			value: counters["MEM_STALL_CYCLES.RSQ_FULL"]
+		}, {
+			name: "Instr Fetch",
+			value: counters["INSTRUCTION_FETCH_STALL"]
+		}];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("MEM_STALL_CYCLES.RSQ_FULL"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("INSTRUCTION_FETCH_STALL"), 1);
-		addOverlayBarPlot(cycles, "Cycles", "Stalls", {columnWidth: 62});
+		addOverlayBarPlot(cycles, "Cycles", "Stalls", {
+			columnWidth: 62
+		});
 	}
 	if ("DISPATCH_STALL.ALL" in counters &&
 		"MICROSEQUENCER_STALL.SERIALIZATION" in counters &&
@@ -355,17 +457,29 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"DISPATCH_STALL.INT_SCHEDULER_QUEUE_FULL" in counters &&
 		"DISPATCH_STALL.FP_SCHEDULER_QUEUE_FULL" in counters &&
 		"DISPATCH_STALL.LDQ_FULL" &&
-		"MICROSEQUENCER_STALL.WAIT_ALL_QUIET")
-	{
-		var dispatchStalls = [
-			{name: "Total", value: counters["DISPATCH_STALL.ALL"]},
-			{name: "Serial", value: counters["MICROSEQUENCER_STALL.SERIALIZATION"]},
-			{name: "Wait Quiet", value: counters["MICROSEQUENCER_STALL.WAIT_ALL_QUIET"]},
-			{name: "Retire Q", value: counters["DISPATCH_STALL.RETIRE_QUEUE_FULL"]},
-			{name: "Int Q", value: counters["DISPATCH_STALL.INT_SCHEDULER_QUEUE_FULL"]},
-			{name: "FP Q", value: counters["DISPATCH_STALL.FP_SCHEDULER_QUEUE_FULL"]},
-			{name: "LD Q", value: counters["DISPATCH_STALL.LDQ_FULL"]}
-		];
+		"MICROSEQUENCER_STALL.WAIT_ALL_QUIET") {
+		var dispatchStalls = [{
+			name: "Total",
+			value: counters["DISPATCH_STALL.ALL"]
+		}, {
+			name: "Serial",
+			value: counters["MICROSEQUENCER_STALL.SERIALIZATION"]
+		}, {
+			name: "Wait Quiet",
+			value: counters["MICROSEQUENCER_STALL.WAIT_ALL_QUIET"]
+		}, {
+			name: "Retire Q",
+			value: counters["DISPATCH_STALL.RETIRE_QUEUE_FULL"]
+		}, {
+			name: "Int Q",
+			value: counters["DISPATCH_STALL.INT_SCHEDULER_QUEUE_FULL"]
+		}, {
+			name: "FP Q",
+			value: counters["DISPATCH_STALL.FP_SCHEDULER_QUEUE_FULL"]
+		}, {
+			name: "LD Q",
+			value: counters["DISPATCH_STALL.LDQ_FULL"]
+		}];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("DISPATCH_STALL.ALL"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("MICROSEQUENCER_STALL.SERIALIZATION"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("DISPATCH_STALL.RETIRE_QUEUE_FULL"), 1);
@@ -373,73 +487,97 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		orderedCountersNames.splice(orderedCountersNames.indexOf("DISPATCH_STALL.FP_SCHEDULER_QUEUE_FULL"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("DISPATCH_STALL.LDQ_FULL"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("MICROSEQUENCER_STALL.WAIT_ALL_QUIET"), 1);
-		addOverlayBarPlot(dispatchStalls, "Cycles", "Dispatch Stalls", {columnWidth: 60});
+		addOverlayBarPlot(dispatchStalls, "Cycles", "Dispatch Stalls", {
+			columnWidth: 60
+		});
 	}
 
 	/* Instructions/uops type statistics */
 	if ("RETIRED_SSEAVX_FLOPS.SP_ADDSUB" in counters &&
 		"RETIRED_SSEAVX_FLOPS.SP_MUL" in counters &&
-		"RETIRED_SSEAVX_FLOPS.SP_DIVSQRT" in counters)
-	{
-		var spSseAvxFlops = [
-			{name: "Add/Sub", value: counters["RETIRED_SSEAVX_FLOPS.SP_ADDSUB"]},
-			{name: "Mul", value: counters["RETIRED_SSEAVX_FLOPS.SP_MUL"]},
-			{name: "Div/Sqrt", value: counters["RETIRED_SSEAVX_FLOPS.SP_DIVSQRT"]}
-		];
+		"RETIRED_SSEAVX_FLOPS.SP_DIVSQRT" in counters) {
+		var spSseAvxFlops = [{
+			name: "Add/Sub",
+			value: counters["RETIRED_SSEAVX_FLOPS.SP_ADDSUB"]
+		}, {
+			name: "Mul",
+			value: counters["RETIRED_SSEAVX_FLOPS.SP_MUL"]
+		}, {
+			name: "Div/Sqrt",
+			value: counters["RETIRED_SSEAVX_FLOPS.SP_DIVSQRT"]
+		}];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("RETIRED_SSEAVX_FLOPS.SP_ADDSUB"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("RETIRED_SSEAVX_FLOPS.SP_MUL"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("RETIRED_SSEAVX_FLOPS.SP_DIVSQRT"), 1);
 		var title = "Single-Precision\nSSE Operations";
 		if ("RETIRED_SSEAVX_FLOPS.SP_FMA" in counters) {
-			spSseAvxFlops.push({name: "FMA", value: counters["RETIRED_SSEAVX_FLOPS.SP_FMA"]});
+			spSseAvxFlops.push({
+				name: "FMA",
+				value: counters["RETIRED_SSEAVX_FLOPS.SP_FMA"]
+			});
 			orderedCountersNames.splice(orderedCountersNames.indexOf("RETIRED_SSEAVX_FLOPS.SP_FMA"), 1);
 			title = "Single-Precision\nSSE/AVX Operations";
 		}
 		if (counters["RETIRED_SSEAVX_FLOPS.SP_ADDSUB"] ||
 			counters["RETIRED_SSEAVX_FLOPS.SP_MUL"] ||
 			counters["RETIRED_SSEAVX_FLOPS.SP_DIVSQRT"] ||
-			counters["RETIRED_SSEAVX_FLOPS.SP_FMA"])
-		{
-			addOverlayBarPlot(spSseAvxFlops, "SP FLOPS", title, {columnWidth: 50});
+			counters["RETIRED_SSEAVX_FLOPS.SP_FMA"]) {
+			addOverlayBarPlot(spSseAvxFlops, "SP FLOPS", title, {
+				columnWidth: 50
+			});
 		}
 	}
 	if ("RETIRED_SSEAVX_FLOPS.DP_ADDSUB" in counters &&
 		"RETIRED_SSEAVX_FLOPS.DP_MUL" in counters &&
-		"RETIRED_SSEAVX_FLOPS.DP_DIVSQRT" in counters)
-	{
-		var dpSseAvxFlops = [
-			{name: "Add/Sub", value: counters["RETIRED_SSEAVX_FLOPS.DP_ADDSUB"]},
-			{name: "Mul", value: counters["RETIRED_SSEAVX_FLOPS.DP_MUL"]},
-			{name: "Div/Sqrt", value: counters["RETIRED_SSEAVX_FLOPS.DP_DIVSQRT"]}
-		];
+		"RETIRED_SSEAVX_FLOPS.DP_DIVSQRT" in counters) {
+		var dpSseAvxFlops = [{
+			name: "Add/Sub",
+			value: counters["RETIRED_SSEAVX_FLOPS.DP_ADDSUB"]
+		}, {
+			name: "Mul",
+			value: counters["RETIRED_SSEAVX_FLOPS.DP_MUL"]
+		}, {
+			name: "Div/Sqrt",
+			value: counters["RETIRED_SSEAVX_FLOPS.DP_DIVSQRT"]
+		}];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("RETIRED_SSEAVX_FLOPS.DP_ADDSUB"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("RETIRED_SSEAVX_FLOPS.DP_MUL"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("RETIRED_SSEAVX_FLOPS.DP_DIVSQRT"), 1);
 		var title = "Double-Precision\nSSE Operations";
 		if ("RETIRED_SSEAVX_FLOPS.DP_FMA" in counters) {
-			dpSseAvxFlops.push({name: "FMA", value: counters["RETIRED_SSEAVX_FLOPS.DP_FMA"]});
+			dpSseAvxFlops.push({
+				name: "FMA",
+				value: counters["RETIRED_SSEAVX_FLOPS.DP_FMA"]
+			});
 			orderedCountersNames.splice(orderedCountersNames.indexOf("RETIRED_SSEAVX_FLOPS.DP_FMA"), 1);
 			title = "Double-Precision\nSSE/AVX Operations";
 		}
 		if (counters["RETIRED_SSEAVX_FLOPS.DP_ADDSUB"] ||
 			counters["RETIRED_SSEAVX_FLOPS.DP_MUL"] ||
 			counters["RETIRED_SSEAVX_FLOPS.DP_DIVSQRT"] ||
-			counters["RETIRED_SSEAVX_FLOPS.DP_FMA"])
-		{
-			addOverlayBarPlot(dpSseAvxFlops, "DP FLOPS", title, {columnWidth: 50});
+			counters["RETIRED_SSEAVX_FLOPS.DP_FMA"]) {
+			addOverlayBarPlot(dpSseAvxFlops, "DP FLOPS", title, {
+				columnWidth: 50
+			});
 		}
 	}
 	if ("SIMD_COMP_INST_RETIRED.PACKED_SINGLE" in counters &&
 		"SIMD_COMP_INST_RETIRED.SCALAR_SINGLE" in counters &&
 		"SIMD_COMP_INST_RETIRED.PACKED_DOUBLE" in counters &&
-		"SIMD_COMP_INST_RETIRED.SCALAR_DOUBLE" in counters)
-	{
-		var computationalInstructions = [
-			{name: "PS", value: counters["SIMD_COMP_INST_RETIRED.PACKED_SINGLE"]},
-			{name: "SS", value: counters["SIMD_COMP_INST_RETIRED.SCALAR_SINGLE"]},
-			{name: "PD", value: counters["SIMD_COMP_INST_RETIRED.PACKED_DOUBLE"]},
-			{name: "SD", value: counters["SIMD_COMP_INST_RETIRED.SCALAR_DOUBLE"]},
-		];
+		"SIMD_COMP_INST_RETIRED.SCALAR_DOUBLE" in counters) {
+		var computationalInstructions = [{
+			name: "PS",
+			value: counters["SIMD_COMP_INST_RETIRED.PACKED_SINGLE"]
+		}, {
+			name: "SS",
+			value: counters["SIMD_COMP_INST_RETIRED.SCALAR_SINGLE"]
+		}, {
+			name: "PD",
+			value: counters["SIMD_COMP_INST_RETIRED.PACKED_DOUBLE"]
+		}, {
+			name: "SD",
+			value: counters["SIMD_COMP_INST_RETIRED.SCALAR_DOUBLE"]
+		}, ];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("SIMD_COMP_INST_RETIRED.PACKED_SINGLE"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("SIMD_COMP_INST_RETIRED.SCALAR_SINGLE"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("SIMD_COMP_INST_RETIRED.PACKED_DOUBLE"), 1);
@@ -447,8 +585,7 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		if (counters["SIMD_COMP_INST_RETIRED.PACKED_SINGLE"] ||
 			counters["SIMD_COMP_INST_RETIRED.SCALAR_SINGLE"] ||
 			counters["SIMD_COMP_INST_RETIRED.PACKED_DOUBLE"] ||
-			counters["SIMD_COMP_INST_RETIRED.SCALAR_DOUBLE"])
-		{
+			counters["SIMD_COMP_INST_RETIRED.SCALAR_DOUBLE"]) {
 			addOverlayBarPlot(computationalInstructions, "Retired Instructions", "Computational\nFloating-Point\nSSE Instructions");
 		}
 	}
@@ -456,15 +593,23 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"SIMD_INST_RETIRED.SCALAR_SINGLE" in counters &&
 		"SIMD_INST_RETIRED.PACKED_DOUBLE" in counters &&
 		"SIMD_INST_RETIRED.SCALAR_DOUBLE" in counters &&
-		"SIMD_INST_RETIRED.VECTOR" in counters)
-	{
-		var sseInstructions = [
-			{name: "PS", value: counters["SIMD_INST_RETIRED.PACKED_SINGLE"]},
-			{name: "SS", value: counters["SIMD_INST_RETIRED.SCALAR_SINGLE"]},
-			{name: "PD", value: counters["SIMD_INST_RETIRED.PACKED_DOUBLE"]},
-			{name: "SD", value: counters["SIMD_INST_RETIRED.SCALAR_DOUBLE"]},
-			{name: "INT", value: counters["SIMD_INST_RETIRED.VECTOR"]},
-		];
+		"SIMD_INST_RETIRED.VECTOR" in counters) {
+		var sseInstructions = [{
+			name: "PS",
+			value: counters["SIMD_INST_RETIRED.PACKED_SINGLE"]
+		}, {
+			name: "SS",
+			value: counters["SIMD_INST_RETIRED.SCALAR_SINGLE"]
+		}, {
+			name: "PD",
+			value: counters["SIMD_INST_RETIRED.PACKED_DOUBLE"]
+		}, {
+			name: "SD",
+			value: counters["SIMD_INST_RETIRED.SCALAR_DOUBLE"]
+		}, {
+			name: "INT",
+			value: counters["SIMD_INST_RETIRED.VECTOR"]
+		}, ];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("SIMD_INST_RETIRED.PACKED_SINGLE"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("SIMD_INST_RETIRED.SCALAR_SINGLE"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("SIMD_INST_RETIRED.PACKED_DOUBLE"), 1);
@@ -474,8 +619,7 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 			counters["SIMD_INST_RETIRED.SCALAR_SINGLE"] ||
 			counters["SIMD_INST_RETIRED.PACKED_DOUBLE"] ||
 			counters["SIMD_INST_RETIRED.SCALAR_DOUBLE"] ||
-			counters["SIMD_INST_RETIRED.VECTOR"])
-		{
+			counters["SIMD_INST_RETIRED.VECTOR"]) {
 			addOverlayBarPlot(sseInstructions, "Retired Instructions", "SSE Instructions");
 		}
 	}
@@ -484,16 +628,26 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"SIMD_UOP_TYPE_EXEC.PACK.S" in counters &&
 		"SIMD_UOP_TYPE_EXEC.UNPACK.S" in counters &&
 		"SIMD_UOP_TYPE_EXEC.LOGICAL.S" in counters &&
-		"SIMD_UOP_TYPE_EXEC.ARITHMETIC.S" in counters)
-	{
-		var packedSseInstructions = [
-			{name: "Mul", value: counters["SIMD_UOP_TYPE_EXEC.MUL.S"]},
-			{name: "Shift", value: counters["SIMD_UOP_TYPE_EXEC.SHIFT.S"]},
-			{name: "Pack", value: counters["SIMD_UOP_TYPE_EXEC.PACK.S"]},
-			{name: "Unpack", value: counters["SIMD_UOP_TYPE_EXEC.UNPACK.S"]},
-			{name: "Bool", value: counters["SIMD_UOP_TYPE_EXEC.LOGICAL.S"]},
-			{name: "Arith", value: counters["SIMD_UOP_TYPE_EXEC.ARITHMETIC.S"]},
-		];
+		"SIMD_UOP_TYPE_EXEC.ARITHMETIC.S" in counters) {
+		var packedSseInstructions = [{
+			name: "Mul",
+			value: counters["SIMD_UOP_TYPE_EXEC.MUL.S"]
+		}, {
+			name: "Shift",
+			value: counters["SIMD_UOP_TYPE_EXEC.SHIFT.S"]
+		}, {
+			name: "Pack",
+			value: counters["SIMD_UOP_TYPE_EXEC.PACK.S"]
+		}, {
+			name: "Unpack",
+			value: counters["SIMD_UOP_TYPE_EXEC.UNPACK.S"]
+		}, {
+			name: "Bool",
+			value: counters["SIMD_UOP_TYPE_EXEC.LOGICAL.S"]
+		}, {
+			name: "Arith",
+			value: counters["SIMD_UOP_TYPE_EXEC.ARITHMETIC.S"]
+		}, ];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("SIMD_UOP_TYPE_EXEC.MUL.S"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("SIMD_UOP_TYPE_EXEC.SHIFT.S"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("SIMD_UOP_TYPE_EXEC.PACK.S"), 1);
@@ -505,8 +659,7 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 			counters["SIMD_UOP_TYPE_EXEC.PACK.S"] ||
 			counters["SIMD_UOP_TYPE_EXEC.UNPACK.S"] ||
 			counters["SIMD_UOP_TYPE_EXEC.LOGICAL.S"] ||
-			counters["SIMD_UOP_TYPE_EXEC.ARITHMETIC.S"])
-		{
+			counters["SIMD_UOP_TYPE_EXEC.ARITHMETIC.S"]) {
 			addOverlayBarPlot(packedSseInstructions, "Executed \u00B5ops", "Packed SSE Instructions");
 		}
 	}
@@ -515,16 +668,26 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"SIMD_UOP_TYPE_EXEC.PACK.AR" in counters &&
 		"SIMD_UOP_TYPE_EXEC.UNPACK.AR" in counters &&
 		"SIMD_UOP_TYPE_EXEC.LOGICAL.AR" in counters &&
-		"SIMD_UOP_TYPE_EXEC.ARITHMETIC.AR" in counters)
-	{
-		var packedSseInstructions = [
-			{name: "Mul", value: counters["SIMD_UOP_TYPE_EXEC.MUL.AR"]},
-			{name: "Shift", value: counters["SIMD_UOP_TYPE_EXEC.SHIFT.AR"]},
-			{name: "Pack", value: counters["SIMD_UOP_TYPE_EXEC.PACK.AR"]},
-			{name: "Unpack", value: counters["SIMD_UOP_TYPE_EXEC.UNPACK.AR"]},
-			{name: "Bool", value: counters["SIMD_UOP_TYPE_EXEC.LOGICAL.AR"]},
-			{name: "Arith", value: counters["SIMD_UOP_TYPE_EXEC.ARITHMETIC.AR"]},
-		];
+		"SIMD_UOP_TYPE_EXEC.ARITHMETIC.AR" in counters) {
+		var packedSseInstructions = [{
+			name: "Mul",
+			value: counters["SIMD_UOP_TYPE_EXEC.MUL.AR"]
+		}, {
+			name: "Shift",
+			value: counters["SIMD_UOP_TYPE_EXEC.SHIFT.AR"]
+		}, {
+			name: "Pack",
+			value: counters["SIMD_UOP_TYPE_EXEC.PACK.AR"]
+		}, {
+			name: "Unpack",
+			value: counters["SIMD_UOP_TYPE_EXEC.UNPACK.AR"]
+		}, {
+			name: "Bool",
+			value: counters["SIMD_UOP_TYPE_EXEC.LOGICAL.AR"]
+		}, {
+			name: "Arith",
+			value: counters["SIMD_UOP_TYPE_EXEC.ARITHMETIC.AR"]
+		}, ];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("SIMD_UOP_TYPE_EXEC.MUL.AR"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("SIMD_UOP_TYPE_EXEC.SHIFT.AR"), 1);
 		orderedCountersNames.splice(orderedCountersNames.indexOf("SIMD_UOP_TYPE_EXEC.PACK.AR"), 1);
@@ -536,8 +699,7 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 			counters["SIMD_UOP_TYPE_EXEC.PACK.AR"] ||
 			counters["SIMD_UOP_TYPE_EXEC.UNPACK.AR"] ||
 			counters["SIMD_UOP_TYPE_EXEC.LOGICAL.AR"] ||
-			counters["SIMD_UOP_TYPE_EXEC.ARITHMETIC.AR"])
-		{
+			counters["SIMD_UOP_TYPE_EXEC.ARITHMETIC.AR"]) {
 			addOverlayBarPlot(packedSseInstructions, "Retired \u00B5ops", "Packed SSE Instructions");
 		}
 	}
@@ -551,12 +713,18 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 }
 
 var getParameters = function() {
-	var n = $("#n-value").val()|0;
-	var incx = $("#incx-value").val()|0;
-	var incy = $("#incy-value").val()|0;
-	var offx = $("#offx-value").val()|0;
-	var offy = $("#offy-value").val()|0;
-	return {n:n, incx: incx, incy: incy, offx: offx, offy: offy};
+	var n = $("#n-value").val() | 0;
+	var incx = $("#incx-value").val() | 0;
+	var incy = $("#incy-value").val() | 0;
+	var offx = $("#offx-value").val() | 0;
+	var offy = $("#offy-value").val() | 0;
+	return {
+		n: n,
+		incx: incx,
+		incy: incy,
+		offx: offx,
+		offy: offy
+	};
 }
 
 var encodeParameters = function(kernel, parameters) {
@@ -628,7 +796,7 @@ var initPeachPy = function(filesystem) {
 
 var loadFileSystem = function() {
 	var request = new XMLHttpRequest();
-	request.open("GET", "pydata.tar", true);
+	request.open("GET", "/pydata.tar", true);
 	request.responseType = "arraybuffer";
 
 	var statusText = "Load PeachPy file system";
