@@ -437,12 +437,15 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"MEM_STALL_CYCLES.RSQ_FULL" in counters) {
 		var cycles = [{
 			name: "Execution",
+			tipname: "Cycles",
 			value: counters["Cycles"]
 		}, {
 			name: "RSQ Full",
+			tipname: "MEM_STALL_CYCLES.RSQ_FULL",
 			value: counters["MEM_STALL_CYCLES.RSQ_FULL"]
 		}, {
 			name: "Instr Fetch",
+			tipname: "INSTRUCTION_FETCH_STALL",
 			value: counters["INSTRUCTION_FETCH_STALL"]
 		}];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("MEM_STALL_CYCLES.RSQ_FULL"), 1);
@@ -460,24 +463,31 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"MICROSEQUENCER_STALL.WAIT_ALL_QUIET") {
 		var dispatchStalls = [{
 			name: "Total",
+			tipname: "DISPATCH_STALL.ALL",
 			value: counters["DISPATCH_STALL.ALL"]
 		}, {
 			name: "Serial",
+			tipname: "MICROSEQUENCER_STALL.SERIALIZATION",
 			value: counters["MICROSEQUENCER_STALL.SERIALIZATION"]
 		}, {
 			name: "Wait Quiet",
+			tipname: "MICROSEQUENCER_STALL.WAIT_ALL_QUIET",
 			value: counters["MICROSEQUENCER_STALL.WAIT_ALL_QUIET"]
 		}, {
 			name: "Retire Q",
+			tipname: "DISPATCH_STALL.RETIRE_QUEUE_FULL",
 			value: counters["DISPATCH_STALL.RETIRE_QUEUE_FULL"]
 		}, {
 			name: "Int Q",
+			tipname: "DISPATCH_STALL.INT_SCHEDULER_QUEUE_FULL",
 			value: counters["DISPATCH_STALL.INT_SCHEDULER_QUEUE_FULL"]
 		}, {
 			name: "FP Q",
+			tipname: "DISPATCH_STALL.FP_SCHEDULER_QUEUE_FULL",
 			value: counters["DISPATCH_STALL.FP_SCHEDULER_QUEUE_FULL"]
 		}, {
 			name: "LD Q",
+			tipname: "DISPATCH_STALL.LDQ_FULL",
 			value: counters["DISPATCH_STALL.LDQ_FULL"]
 		}];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("DISPATCH_STALL.ALL"), 1);
@@ -498,12 +508,15 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"RETIRED_SSEAVX_FLOPS.SP_DIVSQRT" in counters) {
 		var spSseAvxFlops = [{
 			name: "Add/Sub",
+			tipname: "RETIRED_SSEAVX_FLOPS.SP_ADDSUB",
 			value: counters["RETIRED_SSEAVX_FLOPS.SP_ADDSUB"]
 		}, {
 			name: "Mul",
+			tipname: "RETIRED_SSEAVX_FLOPS.SP_MUL",
 			value: counters["RETIRED_SSEAVX_FLOPS.SP_MUL"]
 		}, {
 			name: "Div/Sqrt",
+			tipname: "RETIRED_SSEAVX_FLOPS.SP_DIVSQRT",
 			value: counters["RETIRED_SSEAVX_FLOPS.SP_DIVSQRT"]
 		}];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("RETIRED_SSEAVX_FLOPS.SP_ADDSUB"), 1);
@@ -513,6 +526,7 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		if ("RETIRED_SSEAVX_FLOPS.SP_FMA" in counters) {
 			spSseAvxFlops.push({
 				name: "FMA",
+				tipname: "RETIRED_SSEAVX_FLOPS.SP_FMA",
 				value: counters["RETIRED_SSEAVX_FLOPS.SP_FMA"]
 			});
 			orderedCountersNames.splice(orderedCountersNames.indexOf("RETIRED_SSEAVX_FLOPS.SP_FMA"), 1);
@@ -532,12 +546,15 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"RETIRED_SSEAVX_FLOPS.DP_DIVSQRT" in counters) {
 		var dpSseAvxFlops = [{
 			name: "Add/Sub",
+			tipname: "RETIRED_SSEAVX_FLOPS.DP_ADDSUB",
 			value: counters["RETIRED_SSEAVX_FLOPS.DP_ADDSUB"]
 		}, {
 			name: "Mul",
+			tipname: "RETIRED_SSEAVX_FLOPS.DP_MUL",
 			value: counters["RETIRED_SSEAVX_FLOPS.DP_MUL"]
 		}, {
 			name: "Div/Sqrt",
+			tipname: "RETIRED_SSEAVX_FLOPS.DP_DIVSQRT",
 			value: counters["RETIRED_SSEAVX_FLOPS.DP_DIVSQRT"]
 		}];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("RETIRED_SSEAVX_FLOPS.DP_ADDSUB"), 1);
@@ -547,6 +564,7 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		if ("RETIRED_SSEAVX_FLOPS.DP_FMA" in counters) {
 			dpSseAvxFlops.push({
 				name: "FMA",
+				tipname: "RETIRED_SSEAVX_FLOPS.DP_FMA",
 				value: counters["RETIRED_SSEAVX_FLOPS.DP_FMA"]
 			});
 			orderedCountersNames.splice(orderedCountersNames.indexOf("RETIRED_SSEAVX_FLOPS.DP_FMA"), 1);
@@ -567,15 +585,19 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"SIMD_COMP_INST_RETIRED.SCALAR_DOUBLE" in counters) {
 		var computationalInstructions = [{
 			name: "PS",
+			tipname: "SIMD_COMP_INST_RETIRED.PACKED_SINGLE",
 			value: counters["SIMD_COMP_INST_RETIRED.PACKED_SINGLE"]
 		}, {
 			name: "SS",
+			tipname: "SIMD_COMP_INST_RETIRED.SCALAR_SINGLE",
 			value: counters["SIMD_COMP_INST_RETIRED.SCALAR_SINGLE"]
 		}, {
 			name: "PD",
+			tipname: "SIMD_COMP_INST_RETIRED.PACKED_DOUBLE",
 			value: counters["SIMD_COMP_INST_RETIRED.PACKED_DOUBLE"]
 		}, {
 			name: "SD",
+			tipname: "SIMD_COMP_INST_RETIRED.SCALAR_DOUBLE",
 			value: counters["SIMD_COMP_INST_RETIRED.SCALAR_DOUBLE"]
 		}, ];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("SIMD_COMP_INST_RETIRED.PACKED_SINGLE"), 1);
@@ -596,18 +618,23 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"SIMD_INST_RETIRED.VECTOR" in counters) {
 		var sseInstructions = [{
 			name: "PS",
+			tipname: "SIMD_INST_RETIRED.PACKED_SINGLE",
 			value: counters["SIMD_INST_RETIRED.PACKED_SINGLE"]
 		}, {
 			name: "SS",
+			tipname: "SIMD_INST_RETIRED.SCALAR_SINGLE",
 			value: counters["SIMD_INST_RETIRED.SCALAR_SINGLE"]
 		}, {
 			name: "PD",
+			tipname: "SIMD_INST_RETIRED.PACKED_DOUBLE",
 			value: counters["SIMD_INST_RETIRED.PACKED_DOUBLE"]
 		}, {
 			name: "SD",
+			tipname: "SIMD_INST_RETIRED.SCALAR_DOUBLE",
 			value: counters["SIMD_INST_RETIRED.SCALAR_DOUBLE"]
 		}, {
 			name: "INT",
+			tipname: "SIMD_INST_RETIRED.VECTOR",
 			value: counters["SIMD_INST_RETIRED.VECTOR"]
 		}, ];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("SIMD_INST_RETIRED.PACKED_SINGLE"), 1);
@@ -631,21 +658,27 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"SIMD_UOP_TYPE_EXEC.ARITHMETIC.S" in counters) {
 		var packedSseInstructions = [{
 			name: "Mul",
+			tipname: "SIMD_UOP_TYPE_EXEC.MUL.S",
 			value: counters["SIMD_UOP_TYPE_EXEC.MUL.S"]
 		}, {
 			name: "Shift",
+			tipname: "SIMD_UOP_TYPE_EXEC.SHIFT.S",
 			value: counters["SIMD_UOP_TYPE_EXEC.SHIFT.S"]
 		}, {
 			name: "Pack",
+			tipname: "SIMD_UOP_TYPE_EXEC.PACK.S",
 			value: counters["SIMD_UOP_TYPE_EXEC.PACK.S"]
 		}, {
 			name: "Unpack",
+			tipname: "SIMD_UOP_TYPE_EXEC.UNPACK.S",
 			value: counters["SIMD_UOP_TYPE_EXEC.UNPACK.S"]
 		}, {
 			name: "Bool",
+			tipname: "SIMD_UOP_TYPE_EXEC.LOGICAL.S",
 			value: counters["SIMD_UOP_TYPE_EXEC.LOGICAL.S"]
 		}, {
 			name: "Arith",
+			tipname: "SIMD_UOP_TYPE_EXEC.ARITHMETIC.S",
 			value: counters["SIMD_UOP_TYPE_EXEC.ARITHMETIC.S"]
 		}, ];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("SIMD_UOP_TYPE_EXEC.MUL.S"), 1);
@@ -671,21 +704,27 @@ var analyzePerformanceCounters = function(counters, orderedCountersNames) {
 		"SIMD_UOP_TYPE_EXEC.ARITHMETIC.AR" in counters) {
 		var packedSseInstructions = [{
 			name: "Mul",
+			tipname: "SIMD_UOP_TYPE_EXEC.MUL.AR",
 			value: counters["SIMD_UOP_TYPE_EXEC.MUL.AR"]
 		}, {
 			name: "Shift",
+			tipname: "SIMD_UOP_TYPE_EXEC.SHIFT.AR",
 			value: counters["SIMD_UOP_TYPE_EXEC.SHIFT.AR"]
 		}, {
 			name: "Pack",
+			tipname: "SIMD_UOP_TYPE_EXEC.PACK.AR",
 			value: counters["SIMD_UOP_TYPE_EXEC.PACK.AR"]
 		}, {
 			name: "Unpack",
+			tipname: "SIMD_UOP_TYPE_EXEC.UNPACK.AR",
 			value: counters["SIMD_UOP_TYPE_EXEC.UNPACK.AR"]
 		}, {
 			name: "Bool",
+			tipname: "SIMD_UOP_TYPE_EXEC.LOGICAL.AR",
 			value: counters["SIMD_UOP_TYPE_EXEC.LOGICAL.AR"]
 		}, {
 			name: "Arith",
+			tipname: "SIMD_UOP_TYPE_EXEC.ARITHMETIC.AR",
 			value: counters["SIMD_UOP_TYPE_EXEC.ARITHMETIC.AR"]
 		}, ];
 		orderedCountersNames.splice(orderedCountersNames.indexOf("SIMD_UOP_TYPE_EXEC.MUL.AR"), 1);
