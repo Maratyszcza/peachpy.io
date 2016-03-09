@@ -1,5 +1,5 @@
 // Include gulp
-var gulp = require('gulp'); 
+var gulp = require('gulp');
 
 // Include Our Plugins
 var jshint = require('gulp-jshint');
@@ -30,13 +30,7 @@ gulp.task('sass', function() {
 
 // Concatenate & Minify JS
 gulp.task('scripts', function() {
-    return gulp.src(['./bower_components/jquery/dist/jquery.min.js'
-    	,'./bower_components/bootstrap/dist/js/bootstrap.min.js'
-    	,'./bower_components/d3/d3.min.js'
-    	,'./bower_components/ace-builds/src-min/ace.js'
-    	,'./bower_components/ace-builds/src-min/mode-python.js'
-    	,'./bower_components/ace-builds/src-min/theme-monokai.js'
-        ,'./bower_components/d3-tip/index.js'])
+    return gulp.src(['./bower_components/jquery/dist/jquery.min.js', './bower_components/bootstrap/dist/js/bootstrap.min.js', './bower_components/d3/d3.min.js', './bower_components/ace-builds/src-min/ace.js', './bower_components/ace-builds/src-min/mode-python.js', './bower_components/ace-builds/src-min/theme-monokai.js', './bower_components/d3-tip/index.js'])
         .pipe(concat('all.js'))
         .pipe(uglify())
         .pipe(gulp.dest('dist'));
@@ -65,5 +59,4 @@ gulp.task('watch', function() {
 });
 
 // Default Task
-gulp.task('default', ['sass', 'scripts', 'html', 'resources','scriptspeach']);
-
+gulp.task('default', ['sass', 'scripts', 'html', 'resources', 'scriptspeach']);
