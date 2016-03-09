@@ -108,9 +108,24 @@ var addOverlayBarPlot = function(dataset, label, title, options) {
 
 	var tip = d3.tip()
 		.attr('class', 'd3-tip')
-		.offset([40, 0])
+		.offset(function(d) {
+			if(d.tipname.indexOf("DISPATCHED_FPU_OPS") != -1 && d.value > 150) {
+				return [140, 175];
+			} else if(d.tipname.indexOf("DISPATCHED_FPU_OPS") != -1 && d.value <= 150 && d.value > 50) {
+				return [60, 175];
+			} else if (d.tipname.indexOf("DISPATCHED_FPU_OPS") != -1 && d.value <= 50) {
+				return [0,175];
+			} else {
+				return [40, 0];
+			}
+		})
 		.html(function(d) {
-			return "<strong>" + d.tipname + ":</strong> <span style='color:red'>" + d.value + "</span>";
+			if(d.tipname.indexOf("DISPATCHED_FPU_OPS") != -1) {
+				return "<div style='padding-bottom: 2px;'><strong style='text-decoration: underline; font-size: 1.5em;'>Further Dual Pipe Information</strong></div> <br /> <div style='padding-bottom: 2px;'> <strong>Total " + d.tipname + ":</strong> <span style='color:red'>" + d.value + "</span> </div> <br /> <ul style='list-style-type:disc'> <li> <strong>DISPATCHED_FPU_OPS.DUAL_PIPE.PIPE_0: </strong> 123 </li> <li> <strong>DISPATCHED_FPU_OPS.DUAL_PIPE.PIPE_1: </strong> 16 </li> </ul>";
+			} else {
+				return "<strong>" + d.tipname + ":</strong> <span style='color:red'>" + d.value + "</span>";
+			}
+			
 		})
 
 	barplot.call(tip);
